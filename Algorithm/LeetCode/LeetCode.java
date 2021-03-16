@@ -94,11 +94,69 @@ public class LeetCode{
          * 331. 验证二叉树的前序序列化
          */
         // System.out.println("result: " + isValidSerializationMine("9,#,#,1,#,#"));
-        List<Integer> list = new ArrayList<>();
+        // List<Integer> list = new ArrayList<>();
         
+         /**
+         * 54. 螺旋矩阵
+         */
+        int[][] data = new int[][]{
+            // {1,2,3,4},
+            // {5,6,7,8},
+            // {9,10,11,12}
+
+            // {1,2}
+
+            {1},
+            {2},
+            {3}
+        };
+        System.out.println("result: " + spiralOrderMine(data).toString() );
+
     }
 
+/**
+     * 54. 螺旋矩阵
+     * @param matrix
+     * @return
+     */
+    public static List<Integer> spiralOrderMine(int[][] matrix) {
+        List<Integer> list = new ArrayList<>();
+        if(matrix!=null && matrix.length>0){
+            int num = Math.min(matrix[0].length, matrix.length);
+            int position = num>2?num-2:0;
+            for (int i = 0; i <= position; i++) {
+                setList(i, matrix, list);
+            }
+        }
+        
+        return list;
+    }
+    
 
+    public static void setList(int position,int[][] matrix, List<Integer> list){
+        int row = matrix[0].length;
+        int line = matrix.length;
+        for (int i = position; i < row - position; i++) {
+            list.add(matrix[position][i]);
+        }
+
+        for (int i = position + 1; i < line - position; i++) {
+            list.add(matrix[i][row - position - 1]);
+        }
+
+        if((line - position - 1)>position){
+            for (int i = row - position - 2; i >= position; i--) {
+                list.add(matrix[line-position-1][i]);
+            }
+        }
+        
+        if(position<row-position-1){
+            for (int i = line - position - 2; i >= position + 1; i--) {
+                list.add(matrix[i][position]);
+            }
+        }
+        
+    }
 
     /**
      * 331. 验证二叉树的前序序列化
