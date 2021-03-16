@@ -3,12 +3,13 @@
  * @Version: 2.0
  * @Autor: Heiduo
  * @Date: 2021-03-01 15:28:37
- * @LastEditTime: 2021-03-16 09:42:15
+ * @LastEditTime: 2021-03-16 15:08:33
  * @Contact: heiduox@163.com
  */
 import java.lang.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Stack;
 import java.util.Arrays;
 public class LeetCode{
@@ -99,26 +100,193 @@ public class LeetCode{
          /**
          * 54. 螺旋矩阵
          */
-        int[][] data = new int[][]{
-            // {1,2,3,4},
-            // {5,6,7,8},
-            // {9,10,11,12}
+        // int[][] data = new int[][]{
+        //     {1,2,3,4},
+        //     {5,6,7,8},
+        //     {9,10,11,12}
 
-            // {1,2}
+        //     // {1,2}
 
-            {1},
-            {2},
-            {3}
-        };
-        System.out.println("result: " + spiralOrderMine(data).toString() );
+        //     // {1},
+        //     // {2},
+        //     // {3}
+        // };
+        // System.out.println("result: " + spiralOrder(data).toString() );
+
+        /**
+         * 59. 螺旋矩阵 II
+         */
+        // System.out.println("result: " + Arrays.deepToString(generateMatrix(3)));
+
+        /**
+         * 13. 罗马数字转整数
+         */
+        // System.out.println("result: " + romanToIntMine("IX"));
+
 
     }
 
-/**
+    /**
+     * 14. 最长公共前缀
+     * @param strs
+     * @return
+     */
+    
+     
+    public static String longestCommonPrefixMine(String[] strs) {
+        String commonHead = "";
+        if(strs.length>0){
+            char[] data = strs[0].toCharArray();
+            for (int i = 0; i < data.length; i++) {
+                for (String string : strs) {
+                    if(string.length() <= i || string.charAt(i)!=data[i]){
+                        return commonHead;
+                    }
+                }
+                commonHead+=data[i];
+            }
+        }
+        return commonHead;
+    }
+
+    /**
+     * 13. 罗马数字转整数
+     */
+    public static int romanToIntMine(String s) {
+        int[] intArray = new int[]{1000,500,100,50,10,5,1};
+        char[] romanArray = new char[]{'M','D','C','L','X','V','I'};
+        char[] data = s.toCharArray();
+        int result = 0;
+        int last = -1;
+        for (int i = 0; i < data.length; i++) {
+            int position = -1;
+            for (int j = 0; j < romanArray.length; j++) {
+                if(data[i] == romanArray[j]){
+                    position = j;
+                    break;
+                }
+            }
+            if(last!=-1 && position<last){
+                result -= intArray[last]*2;
+            }
+            result += intArray[position];
+            last = position;
+        }
+        return result;
+    }
+
+    /**
+     * 59. 螺旋矩阵 II
+     * @param n
+     * @return
+     */
+    public static int[][] generateMatrix(int n) {
+        int[][] result = new int[n][n];
+        int count = 1;
+        if(n>0){
+            int rows = n, columns = n;
+            int left = 0, right = columns - 1, top = 0, bottom = rows - 1;
+            while(left <= right && top <= bottom){
+                for (int i = left; i <= right; i++) {
+                    result[top][i] = count++;
+                }
+                for (int i = top + 1; i <= bottom; i++) {
+                    result[i][right] = count++;
+                }
+                if(left<right && top<bottom){
+                    for (int i = right - 1; i > left; i--) {
+                        result[bottom][i] = count++;
+                    }
+                    for (int i = bottom ; i > top; i--) {
+                        result[i][left] = count++;
+                    }
+                }
+                top++;
+                left++;
+                bottom--;
+                right--;
+            }
+        }
+        
+        return result;
+    }
+
+    public static int[][] generateMatrixMine(int n) {
+        int[][] result = new int[n][n];
+        int count = 1;
+        if(n>0){
+            int num = n;
+            int position = num>2?num-2:0;
+            for (int i = 0; i <= position; i++) {
+                count = setList2(i, result,count);
+            }
+        }
+        
+        return result;
+    }
+
+    public static int setList2(int position,int[][] matrix,int count){
+        int row = matrix[0].length;
+        int line = matrix.length;
+        for (int i = position; i < row - position; i++) {
+            matrix[position][i] = count++;
+        }
+
+        for (int i = position + 1; i < line - position; i++) {
+            matrix[i][row - position - 1] = count++;
+        }
+
+        if((line - position - 1)>position){
+            for (int i = row - position - 2; i >= position; i--) {
+                matrix[line-position-1][i] = count++;
+            }
+        }
+        
+        if(position<row-position-1){
+            for (int i = line - position - 2; i >= position + 1; i--) {
+                matrix[i][position] = count++;
+            }
+        }
+
+        return count;
+        
+    }
+
+    /**
      * 54. 螺旋矩阵
      * @param matrix
      * @return
      */
+    public static List<Integer> spiralOrder(int[][] matrix) {
+        List<Integer> list = new ArrayList<>();
+        if(matrix!=null && matrix.length>0){
+            int rows = matrix.length, columns = matrix[0].length;
+            int left = 0, right = columns - 1, top = 0, bottom = rows - 1;
+            while(left <= right && top <= bottom){
+                for (int i = left; i <= right; i++) {
+                    list.add(matrix[top][i]);
+                }
+                for (int i = top + 1; i <= bottom; i++) {
+                    list.add(matrix[i][right]);
+                }
+                if(left<right && top<bottom){
+                    for (int i = right - 1; i > left; i--) {
+                        list.add(matrix[bottom][i]);
+                    }
+                    for (int i = bottom ; i > top; i--) {
+                        list.add(matrix[i][left]);
+                    }
+                }
+                top++;
+                left++;
+                bottom--;
+                right--;
+            }
+        }
+        
+        return list;
+    }
+
     public static List<Integer> spiralOrderMine(int[][] matrix) {
         List<Integer> list = new ArrayList<>();
         if(matrix!=null && matrix.length>0){
@@ -131,7 +299,6 @@ public class LeetCode{
         
         return list;
     }
-    
 
     public static void setList(int position,int[][] matrix, List<Integer> list){
         int row = matrix[0].length;
