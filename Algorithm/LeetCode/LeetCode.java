@@ -3,7 +3,7 @@
  * @Version: 2.0
  * @Autor: Heiduo
  * @Date: 2021-03-01 15:28:37
- * @LastEditTime: 2021-03-16 15:08:33
+ * @LastEditTime: 2021-03-18 11:01:24
  * @Contact: heiduox@163.com
  */
 import java.lang.*;
@@ -123,7 +123,125 @@ public class LeetCode{
          */
         // System.out.println("result: " + romanToIntMine("IX"));
 
+        /**
+         * 115. 不同的子序列
+         */
+        // System.out.println("result: " + numDistinctMine("babgbag","bag"));
 
+        /**
+         * 92. 反转链表 II
+         */
+        int length = 2;
+        List<Integer> data = new ArrayList<>();
+        ListNode lst = new ListNode(length+1);
+        for (int i = length; i > 0; i--) {
+            ListNode lst2 = new ListNode(i);
+            lst2.next = lst;
+            lst = lst2;
+        }
+        ListNode result = reverseBetweenMine(lst,1,2);
+        while(result!=null){
+            data.add(result.val);
+            result = result.next;
+        }
+        System.out.println("result: " + data.toString());
+    }
+
+    /**
+     * 92. 反转链表 II
+     * 头插法 或 用栈
+     */
+    public static class ListNode {
+        int val;
+        ListNode next;
+        ListNode() {}
+        ListNode(int val) { this.val = val; }
+        ListNode(int val, ListNode next) { this.val = val; this.next = next; }
+    }
+
+    public static ListNode reverseBetween(ListNode head, int left, int right) {
+        ListNode result = new ListNode(-1,head);
+        ListNode pre = result;
+        for (int i = 0; i < left-1; i++) {
+            pre = pre.next;
+        }
+
+        ListNode cur = pre.next;
+        ListNode next;
+        for (int i = 0; i < right - left; i++) {
+            next = cur.next;
+            cur.next = next.next;
+            next.next = pre.next;
+            pre.next = next;
+        }
+        return result.next;
+    }
+
+    public static ListNode reverseBetweenMine(ListNode head, int left, int right) {
+        if(left == right){
+            return head;
+        }
+
+        int position = 1;
+        ListNode result2 = new ListNode(-1,head);
+        ListNode result = result2;
+        ListNode result_rever = null;
+        
+        while(head!=null){
+            if(position<left-1){
+                result2 = result2.next;
+            }else if(position >right){
+                result2.next = result_rever;
+                while(result_rever.next!=null){
+                    result_rever = result_rever.next;
+                }
+                result_rever.next = head;
+                return result.next;
+            }else if(position>=left && position <=right){
+                ListNode result_temp = new ListNode(head.val);
+                result_temp.next = result_rever;
+                result_rever = result_temp;
+            }
+            position++;
+            head = head.next;
+            
+        }
+        result2.next = result_rever;
+        return result.next;
+    }
+
+    /**
+     * 115. 不同的子序列
+     */
+    public static int numDistinctMine(String s, String t) {
+        char[] tArray = t.toCharArray();
+        char[] sArray = s.toCharArray();
+        int n = tArray.length;
+        int m = sArray.length;
+        if(n==0 || m==0){
+            return 0;
+        }
+        int[][] dp = new int[n][m];
+
+        for (int i = 0; i < n; i++) {
+            for (int j = i; j < m; j++) {
+                if(tArray[i] == sArray[j]){
+                    if(j == 0){
+                        dp[i][j] = 1;
+                    }else if(i == 0){
+                        dp[i][j] = dp[i][j-1] + 1;
+                    }else{
+                        dp[i][j] = dp[i-1][j-1] + dp[i][j-1];
+                    }
+                }else{
+                    if(j!=0){
+                        dp[i][j] = dp[i][j-1];                        
+                    }
+                }
+            }
+        }
+
+        return dp[n-1][m-1];
     }
 
     /**
@@ -131,8 +249,6 @@ public class LeetCode{
      * @param strs
      * @return
      */
-    
-     
     public static String longestCommonPrefixMine(String[] strs) {
         String commonHead = "";
         if(strs.length>0){
