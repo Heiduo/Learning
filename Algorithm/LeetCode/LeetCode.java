@@ -3,7 +3,7 @@
  * @Version: 2.0
  * @Autor: Heiduo
  * @Date: 2021-03-01 15:28:37
- * @LastEditTime: 2021-03-18 11:01:24
+ * @LastEditTime: 2021-03-18 17:52:06
  * @Contact: heiduox@163.com
  */
 import java.lang.*;
@@ -131,20 +131,95 @@ public class LeetCode{
         /**
          * 92. 反转链表 II
          */
-        int length = 2;
-        List<Integer> data = new ArrayList<>();
-        ListNode lst = new ListNode(length+1);
-        for (int i = length; i > 0; i--) {
-            ListNode lst2 = new ListNode(i);
-            lst2.next = lst;
-            lst = lst2;
+        // int length = 2;
+        // List<Integer> data = new ArrayList<>();
+        // ListNode lst = new ListNode(length+1);
+        // for (int i = length; i > 0; i--) {
+        //     ListNode lst2 = new ListNode(i);
+        //     lst2.next = lst;
+        //     lst = lst2;
+        // }
+        // ListNode result = reverseBetweenMine(lst,1,2);
+        // while(result!=null){
+        //     data.add(result.val);
+        //     result = result.next;
+        // }
+        // System.out.println("result: " + data.toString());
+
+        /**
+         * 74. 搜索二维矩阵
+         */
+        // int[][] test = {{1,3,5,7},{10,11,16,20},{23,30,34,60}};
+        // System.out.println("result: " + searchMatrix(test,3));
+
+        /**
+         * 15. 三数之和
+         */
+    }
+
+    /**
+     * 15. 三数之和
+     * @param nums
+     * @return
+     */
+    public static List<List<Integer>> threeSumMine(int[] nums) {
+        List<List<Integer>> result = new ArrayList<>();
+        int length = nums.length;
+        if(length<3){
+            return result;
         }
-        ListNode result = reverseBetweenMine(lst,1,2);
-        while(result!=null){
-            data.add(result.val);
-            result = result.next;
+        Arrays.sort(nums);
+        
+        for (int i = 0; i < length - 2; i++) {
+            if(nums[i]>0) break;
+            if(i>0 && nums[i] == nums[i-1]) continue;
+
+            int target = -nums[i];
+            int left = i + 1;
+            int right = length -1;
+            while(left<right){
+                if(nums[left] + nums[right] == target){
+                    result.add(new ArrayList<>(Arrays.asList(nums[i],nums[left],nums[right])));
+                    left ++;
+                    right --;
+                    while(left<right && nums[left] == nums[left-1]) left++;
+                    while(left<right && nums[right] == nums[right+1]) right--;
+                }else if(nums[left] + nums[right]<target){
+                    left++;
+                }else{
+                    right --;
+                }
+            }   
         }
-        System.out.println("result: " + data.toString());
+        return result;
+    }
+
+    /**
+     * 74. 搜索二维矩阵
+     */
+    public static boolean searchMatrix(int[][] matrix, int target) {
+        int rows = matrix.length;
+        int colmuns = matrix[0].length;
+        int left = 0,right = rows*colmuns-1;
+        while(left < right){
+            int mid = (right+left)/2;
+            int row = mid/colmuns;
+            int column = mid%colmuns;
+            if(matrix[row][column] == target){
+                return true;
+            }else if(matrix[row][column] < target){
+                left = mid+1;
+            }else{
+                right = mid-1;
+            }
+        }
+        
+        return false;
+    }
+
+    public boolean search74(int[][]matrix,int left,int right,int target){
+        
+        return false;
     }
 
     /**
