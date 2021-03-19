@@ -3,7 +3,7 @@
  * @Version: 2.0
  * @Autor: Heiduo
  * @Date: 2021-03-01 15:28:37
- * @LastEditTime: 2021-03-18 17:52:06
+ * @LastEditTime: 2021-03-19 10:58:25
  * @Contact: heiduox@163.com
  */
 import java.lang.*;
@@ -153,8 +153,47 @@ public class LeetCode{
         // System.out.println("result: " + searchMatrix(test,3));
 
         /**
-         * 15. 三数之和
+         * 16. 最接近的三数之和
          */
+        int[] test = {-100,-98,-2,-1};
+        System.out.println("result: " + threeSumClosestMine(test,-101));
+    }
+
+    /**
+     * 16. 最接近的三数之和
+     * @param nums
+     * @param target
+     * @return
+     */
+    public static int threeSumClosestMine(int[] nums, int target) {
+        int resultMin= -1000000,resultMax = 1000000;
+        int length = nums.length;
+        if(length < 3){
+            return 0;
+        }
+        Arrays.sort(nums);
+        
+        for (int i = 0; i < nums.length - 2; i++) {
+            if(i>0 && nums[i] == nums[i-1]) continue;
+            
+            int target2 = target-nums[i];
+            int left = i + 1;
+            int right = length -1;
+            while(left<right){
+                if(nums[left] + nums[right] == target2){
+                    return target;
+                }else if(nums[left] + nums[right] < target2){
+                    resultMin = Math.max(nums[i] + nums[left] + nums[right],resultMin);
+                    left++;
+                }else{
+                    resultMax = Math.min(nums[i] + nums[left] + nums[right],resultMax);
+                    right--;
+                }
+            } 
+            
+        }
+
+        return (target - resultMin)<(resultMax-target)?resultMin:resultMax;
     }
 
     /**
@@ -169,7 +208,6 @@ public class LeetCode{
             return result;
         }
         Arrays.sort(nums);
-        
         for (int i = 0; i < length - 2; i++) {
             if(nums[i]>0) break;
             if(i>0 && nums[i] == nums[i-1]) continue;
