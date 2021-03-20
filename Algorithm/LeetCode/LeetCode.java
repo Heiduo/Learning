@@ -3,7 +3,7 @@
  * @Version: 2.0
  * @Autor: Heiduo
  * @Date: 2021-03-01 15:28:37
- * @LastEditTime: 2021-03-19 10:58:25
+ * @LastEditTime: 2021-03-20 09:51:48
  * @Contact: heiduox@163.com
  */
 import java.lang.*;
@@ -155,8 +155,69 @@ public class LeetCode{
         /**
          * 16. 最接近的三数之和
          */
-        int[] test = {-100,-98,-2,-1};
-        System.out.println("result: " + threeSumClosestMine(test,-101));
+        // int[] test = {-100,-98,-2,-1};
+        // System.out.println("result: " + threeSumClosestMine(test,-101));
+
+        /**
+         * 150. 逆波兰表达式求值
+         */
+        String[] test = {"10","6","9","3","+","-11","*","/","*","17","+","5","+"};
+        System.out.println("result: " + evalRPNMine(test));
+    }
+
+    /**
+     * 150. 逆波兰表达式求值
+     * @param tokens
+     * @return
+     */
+    public static int evalRPN(String[] tokens) {
+        int[] stack = new int[tokens.length];
+        int top = -1;
+        for (int i = 0; i < tokens.length; i++) {
+            if(tokens[i].equals("+")){
+                top--;
+                stack[top] = stack[top] + stack[top+1];
+            }else if(tokens[i].equals("-")){
+                top--;
+                stack[top] = stack[top] - stack[top+1];
+            }else if(tokens[i].equals("*")){
+                top--;
+                stack[top] = stack[top] * stack[top+1];
+            }else if(tokens[i].equals("/")){
+                top--;
+                stack[top] = stack[top] / stack[top+1];
+            }else{
+                top ++;
+                stack[top] = Integer.valueOf(tokens[i]);
+            }
+        }
+        return stack[top];
+    }
+
+    public static int evalRPNMine(String[] tokens) {
+        Stack<Integer> stack = new Stack<>();
+        for (int i = 0; i < tokens.length; i++) {
+            if(tokens[i].equals("+")){
+                int m = stack.pop();
+                int n = stack.pop();
+                stack.push(n+m);
+            }else if(tokens[i].equals("-")){
+                int m = stack.pop();
+                int n = stack.pop();
+                stack.push(n-m);
+            }else if(tokens[i].equals("*")){
+                int m = stack.pop();
+                int n = stack.pop();
+                stack.push(n*m);
+            }else if(tokens[i].equals("/")){
+                int m = stack.pop();
+                int n = stack.pop();
+                stack.push(n/m);
+            }else{
+                stack.push(Integer.valueOf(tokens[i]));
+            }
+        }
+        return stack.pop();
     }
 
     /**
