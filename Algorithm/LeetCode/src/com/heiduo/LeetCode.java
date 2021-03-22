@@ -1,10 +1,11 @@
-package com.heiduo;
+package src.com.heiduo;
+// package com.heiduo;
 /*
  * @Description:
  * @Version: 2.0
  * @Autor: Heiduo
  * @Date: 2021-03-01 15:28:37
- * @LastEditTime: 2021-03-20 09:51:48
+ * @LastEditTime: 2021-03-22 09:58:28
  * @Contact: heiduox@163.com
  */
 
@@ -177,10 +178,52 @@ public class LeetCode {
         /**
          * 1201. 丑数 III
          */
-        System.out.println("result: " + nthUglyNumberMine2(1000000000
-                ,2
-                ,217983653
-                ,336916467));
+        // System.out.println("result: " + nthUglyNumberMine2(1000000000
+        //         ,2
+        //         ,217983653
+        //         ,336916467));
+        System.out.println("result: " + hammingWeightOther2(-3));
+    }
+
+    /***
+     * 191. 位1的个数
+     * @param n
+     * @return
+     */
+    public static int hammingWeightOther3(int n) {
+        int result = 0;
+        while(n!=0){
+            //n & (n−1)，其预算结果恰为把 n 的二进制位中的最低位的 1 变为 0 之后的结果
+            n = n & (n-1);
+            result++;
+        }
+        return result;
+    }
+
+    public static int hammingWeightOther2(int n) {
+        int result = 0;
+        for (int i = 0; i < 32; i++) {
+            if((n & (1 << i)) !=0){
+                result++;
+            }
+        }
+        return result;
+    }
+
+    public static int hammingWeightOther(int n) {
+        
+        return Integer.bitCount(n);
+    }
+
+    public static int hammingWeightMine(int n) {
+        int result = 0;
+        for (int i = 0; i < 32; i++) {
+            if(Math.abs(n)%2==1){
+                result++;
+            }
+            n = n>>>1;
+        }
+        return result;
     }
 
     /**
