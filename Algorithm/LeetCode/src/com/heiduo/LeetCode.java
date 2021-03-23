@@ -5,7 +5,7 @@ package src.com.heiduo;
  * @Version: 2.0
  * @Autor: Heiduo
  * @Date: 2021-03-01 15:28:37
- * @LastEditTime: 2021-03-22 09:58:28
+ * @LastEditTime: 2021-03-23 13:54:21
  * @Contact: heiduox@163.com
  */
 
@@ -15,6 +15,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Stack;
 import java.util.Arrays;
+import java.util.Deque;
+import java.util.LinkedList;
 
 public class LeetCode {
     private static Stack<Integer> s1, s2;
@@ -182,8 +184,81 @@ public class LeetCode {
         //         ,2
         //         ,217983653
         //         ,336916467));
-        System.out.println("result: " + hammingWeightOther2(-3));
+        // System.out.println("result: " + hammingWeightOther2(-3));
+    
+        /**
+         * 402. 移掉K位数字
+         */
+        System.out.println("result: " + removeKdigitsMine2("1230",3));
+         
     }
+
+    /**
+     * 402. 移掉K位数字
+     */
+
+    public static String removeKdigitsMine2(String num, int k){
+        LinkedList<Character> stack = new LinkedList<>();
+        int length = num.length();
+        if(k>=length){
+            return "0";
+        }
+        char[] data = num.toCharArray();
+        for (int i = 0; i < length; i++) {
+            while(!stack.isEmpty() && k>0 && stack.peekLast() >data[i] ){
+                stack.pollLast();
+                k--;
+            }
+            stack.offerLast(data[i]);
+        }
+        for (int i = 0; i < k; i++) {
+            stack.pollLast();
+        }
+        StringBuilder ret = new StringBuilder();
+        boolean leadingZero = true;
+        while (!stack.isEmpty()) {
+            char digit = stack.pollFirst();
+            if (leadingZero && digit == '0') {
+                continue;
+            }
+            leadingZero = false;
+            ret.append(digit);
+        }
+        return ret.length() == 0 ? "0" : ret.toString();
+    }
+
+    //错误输入  112 1
+    public static String removeKdigitsMine(String num, int k) {
+        int length = num.length();
+        if(k>=length){
+            return "0";
+        }
+        char[] data = num.toCharArray();
+        char min = '9' + 1 ;
+        int last = -1;
+        for (int i = 0; i <= k; i++) {
+            if(data[i]<min){
+                min = data[i];
+                if(last == -1){
+                    last = i;
+                }else{
+                    data[last] = 'a';
+                }
+            }else{
+                data[i] = 'a';
+            }
+        }
+        String result = String.valueOf(data);
+        result = result.replaceAll("a","");
+        return String.valueOf(Integer.valueOf(result));
+        
+    }
+
+    /**
+     * 341. 扁平化嵌套列表迭代器
+     * @return
+     */
+    
 
     /***
      * 191. 位1的个数
@@ -211,7 +286,12 @@ public class LeetCode {
     }
 
     public static int hammingWeightOther(int n) {
-        
+        // n = n - ((n >>> 1) & 0x55555555);
+        // n = (n & 0x33333333) + ((n >>> 2) & 0x33333333);
+        // n = (n + (n >>> 4)) & 0x0f0f0f0f;
+        // n = n + (n >>> 8);
+        // n = n + (n >>> 16);
+        // return n & 0x3f;
         return Integer.bitCount(n);
     }
 
