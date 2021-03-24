@@ -1,5 +1,5 @@
-package src.com.heiduo;
-// package com.heiduo;
+//package src.com.heiduo;
+ package com.heiduo;
 /*
  * @Description:
  * @Version: 2.0
@@ -189,8 +189,66 @@ public class LeetCode {
         /**
          * 402. 移掉K位数字
          */
-        System.out.println("result: " + removeKdigitsMine2("1230",3));
-         
+//        System.out.println("result: " + removeKdigitsMine2("1230",3));
+
+        /**
+         * 456. 132 模式
+         */
+         System.out.println("result: " + find132patternMine(new int[]{
+                 -1,3,2,0
+         }));
+    }
+
+    /**
+     * 456. 132 模式
+     * @param nums
+     * @return
+     */
+    public static boolean find132pattern(int[] nums){
+        int length  = nums.length;
+        if (length<3){
+            return false;
+        }
+        Deque<Integer> deque = new LinkedList<>();
+        deque.push(nums[length-1]);
+        int maxT = Integer.MIN_VALUE;
+
+        for (int i = length-1; i >=0 ; i--) {
+            if (nums[i] < maxT){
+                return true;
+            }
+
+            while(!deque.isEmpty() && nums[i] > deque.peek()){
+                maxT = deque.pop();
+            }
+
+            if (nums[i] > maxT){
+                deque.push(nums[i]);
+            }
+        }
+
+        return false;
+    }
+
+    //暴力解法 O(n^2)
+    public static boolean find132patternMine(int[] nums) {
+        int length  = nums.length;
+        if (length<3){
+            return false;
+        }
+
+        int min = Integer.MAX_VALUE;
+        for (int i = 1; i < length - 1; i++) {
+            if(min > nums[i-1] && nums[i-1]<nums[i]){
+                min = nums[i-1];
+            }
+            for (int j = i+1; j < length; j++) {
+                if(nums[j]<nums[i] && nums[j]>min){
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 
     /**
