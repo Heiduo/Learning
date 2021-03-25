@@ -1,11 +1,11 @@
-//package src.com.heiduo;
- package com.heiduo;
+package src.com.heiduo;
+//  package com.heiduo;
 /*
  * @Description:
  * @Version: 2.0
  * @Autor: Heiduo
  * @Date: 2021-03-01 15:28:37
- * @LastEditTime: 2021-03-23 13:54:21
+ * @LastEditTime: 2021-03-25 10:33:12
  * @Contact: heiduox@163.com
  */
 
@@ -194,9 +194,86 @@ public class LeetCode {
         /**
          * 456. 132 模式
          */
-         System.out.println("result: " + find132patternMine(new int[]{
-                 -1,3,2,0
-         }));
+        //  System.out.println("result: " + find132patternMine(new int[]{
+        //          -1,3,2,0
+        //  }));
+
+        /**
+         * 82. 删除排序链表中的重复元素 II
+         */
+        int[] data1 = {1,2,3,3,4,4,5,5};
+        List<Integer> data = new ArrayList<>();
+        ListNode lst = new ListNode(-1);
+        ListNode lst2 = lst;
+
+        for (int i = 0; i <data1.length; i++) {
+            ListNode lst3 = new ListNode(data1[i]);
+            lst2.next = lst3;
+            lst2 = lst2.next;
+        }
+        ListNode result = deleteDuplicates(lst.next);
+        while(result!=null){
+            data.add(result.val);
+            result = result.next;
+        }
+        System.out.println("result: " + data.toString());
+    }
+
+    /**
+     * 82. 删除排序链表中的重复元素 II
+     * @param head
+     * @return
+     */
+    public static ListNode deleteDuplicates(ListNode head){
+        if(head == null){
+            return null;
+        }
+        ListNode pre = new ListNode(0,head);
+        ListNode node = pre;
+        while(pre.next!=null && pre.next.next!=null){
+            if(pre.next.val == pre.next.next.val){
+                int x = pre.next.val;
+                while(pre.next!=null && pre.next.val==x){
+                    pre.next = pre.next.next;
+                }
+            }else{
+                pre = pre.next;
+            }
+        }
+
+        return node.next;
+    }
+
+    //比上面方法耗时少 100%
+    public static ListNode deleteDuplicatesMine(ListNode head){
+        if(head == null){
+            return null;
+        }
+        ListNode pre = new ListNode(Integer.MIN_VALUE);
+        pre.next = head;
+        ListNode node = pre;
+                
+        boolean equal = false;
+        head = head.next;
+        while(head!= null){
+            if(pre.next.val == head.val){
+                equal = true;
+                pre.next.next = head.next;
+            }else{
+                if(equal){
+                    pre.next = head;
+                    equal = false;
+                }else{
+                    pre = pre.next;
+                }
+            }
+            head = head.next;
+        }
+        if(equal){
+            pre.next = head;
+            equal = false;
+        }
+        return node.next;
     }
 
     /**
