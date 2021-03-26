@@ -5,7 +5,7 @@ package src.com.heiduo;
  * @Version: 2.0
  * @Autor: Heiduo
  * @Date: 2021-03-01 15:28:37
- * @LastEditTime: 2021-03-25 10:33:12
+ * @LastEditTime: 2021-03-26 09:33:48
  * @Contact: heiduox@163.com
  */
 
@@ -217,6 +217,27 @@ public class LeetCode {
             result = result.next;
         }
         System.out.println("result: " + data.toString());
+    }
+
+    /**
+     * 83. 删除排序链表中的重复元素
+     * @param head
+     * @return
+     */
+    public static ListNode deleteDuplicates83Mine(ListNode head){
+        if(head == null){
+            return null;
+        }
+        ListNode pre = new ListNode(-1,head);
+        while(head.next!=null){
+            if(head.val == head.next.val){
+                head.next = head.next.next;
+            }else{
+                head = head.next;
+            }
+        }
+
+        return pre.next; 
     }
 
     /**
