@@ -5,7 +5,7 @@ package src.com.heiduo;
  * @Version: 2.0
  * @Autor: Heiduo
  * @Date: 2021-03-01 15:28:37
- * @LastEditTime: 2021-03-26 09:33:48
+ * @LastEditTime: 2021-03-27 09:34:30
  * @Contact: heiduox@163.com
  */
 
@@ -201,7 +201,27 @@ public class LeetCode {
         /**
          * 82. 删除排序链表中的重复元素 II
          */
-        int[] data1 = {1,2,3,3,4,4,5,5};
+        // int[] data1 = {1,2,3,3,4,4,5,5};
+        // List<Integer> data = new ArrayList<>();
+        // ListNode lst = new ListNode(-1);
+        // ListNode lst2 = lst;
+
+        // for (int i = 0; i <data1.length; i++) {
+        //     ListNode lst3 = new ListNode(data1[i]);
+        //     lst2.next = lst3;
+        //     lst2 = lst2.next;
+        // }
+        // ListNode result = rotateRightMine(lst.next,0);
+        // while(result!=null){
+        //     data.add(result.val);
+        //     result = result.next;
+        // }
+        // System.out.println("result: " + data.toString());
+
+        /**
+         * 61. 旋转链表
+         */
+        int[] data1 = {1,2,3,4,5};
         List<Integer> data = new ArrayList<>();
         ListNode lst = new ListNode(-1);
         ListNode lst2 = lst;
@@ -211,12 +231,38 @@ public class LeetCode {
             lst2.next = lst3;
             lst2 = lst2.next;
         }
-        ListNode result = deleteDuplicates(lst.next);
+        ListNode result = rotateRightMine(lst.next,7);
         while(result!=null){
             data.add(result.val);
             result = result.next;
         }
         System.out.println("result: " + data.toString());
+    }
+
+    /**
+     * 61. 旋转链表
+     * @param head
+     * @param k
+     * @return
+     */
+    public static ListNode rotateRightMine(ListNode head, int k) {
+        if(head == null){
+            return null;
+        }
+        ListNode pre = head;
+        int length = 1;
+        while(head.next != null){
+            head = head.next;
+            length ++;
+        }
+        head.next = pre;
+        int position = length - k % length;
+        for (int i = 0; i < position - 1; i++) {
+            pre = pre.next;
+        }
+        ListNode result = pre.next;
+        pre.next = null;
+        return result;
     }
 
     /**
