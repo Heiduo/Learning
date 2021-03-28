@@ -1,5 +1,5 @@
-package src.com.heiduo;
-//  package com.heiduo;
+//package src.com.heiduo;
+  package com.heiduo;
 /*
  * @Description:
  * @Version: 2.0
@@ -221,22 +221,151 @@ public class LeetCode {
         /**
          * 61. 旋转链表
          */
-        int[] data1 = {1,2,3,4,5};
-        List<Integer> data = new ArrayList<>();
-        ListNode lst = new ListNode(-1);
-        ListNode lst2 = lst;
+//        int[] data1 = {1,2,3,4,5};
+//        List<Integer> data = new ArrayList<>();
+//        ListNode lst = new ListNode(-1);
+//        ListNode lst2 = lst;
+//
+//        for (int i = 0; i <data1.length; i++) {
+//            ListNode lst3 = new ListNode(data1[i]);
+//            lst2.next = lst3;
+//            lst2 = lst2.next;
+//        }
+//        ListNode result = rotateRightMine(lst.next,7);
+//        while(result!=null){
+//            data.add(result.val);
+//            result = result.next;
+//        }
+//        System.out.println("result: " + data.toString());
+        /**
+         * 173. 二叉搜索树迭代器
+         */
+//        int[] data = new int[]{7,3,15,9,20};
+//        TreeNode[] data2= new TreeNode[data.length];
+//        for (int i = 0; i < data.length; i++) {
+//            data2[i] = new TreeNode(data[i]);
+//        }
+//        data2[2].left = data2[3];
+//        data2[2].right = data2[4];
+//        data2[0].left = data2[1];
+//        data2[0].right = data2[2];
+//        BSTIterator iterator = new BSTIterator(data2[0]);
+//        while (iterator.hasNext()){
+//            System.out.println("result: " + iterator.next());
+//        }
+    }
 
-        for (int i = 0; i <data1.length; i++) {
-            ListNode lst3 = new ListNode(data1[i]);
-            lst2.next = lst3;
-            lst2 = lst2.next;
+    /**
+     * 131. 分割回文串
+     * @param s
+     * @return
+     */
+
+    public static List<List<String>> partitionMine(String s) {
+        List<List<String>> result = new ArrayList<>();
+        char[] data = s.toCharArray();
+        int length = data.length;
+        boolean[][] f = new boolean[length][length];
+        for (int i = 0; i < length; i++) {
+            for (int j = i; j >=0 ; j--) {
+                if (i-j==1){
+                    f[i][j] = f[j][i] = data[i] == data[j];
+                }else{
+                    f[i][j] = f[j][i] = data[i] == data[j] && f[j+1][i-1];
+                }
+            }
         }
-        ListNode result = rotateRightMine(lst.next,7);
-        while(result!=null){
-            data.add(result.val);
-            result = result.next;
+
+        return result;
+    }
+    boolean[][] f;
+    List<List<String>> ret = new ArrayList<List<String>>();
+    List<String> ans = new ArrayList<String>();
+    int n;
+    public void dfs(String s, int i) {
+        if (i == n) {
+            ret.add(new ArrayList<String>(ans));
+            return;
         }
-        System.out.println("result: " + data.toString());
+        for (int j = i; j < n; ++j) {
+            if (f[i][j]) {
+                ans.add(s.substring(i, j + 1));
+                dfs(s, j + 1);
+                ans.remove(ans.size() - 1);
+            }
+        }
+    }
+
+    /**
+     * 304. 二维区域和检索 - 矩阵不可变
+     */
+    static int[][] sumMatrix;
+    public LeetCode(int[][] matrix){
+        int rows = matrix.length;
+        if (rows>0){
+            int columns = matrix[0].length;
+            sumMatrix = new int[rows +1][columns+1];
+            for (int i = 0; i < rows; i++) {
+                for (int j = 0; j < columns; j++) {
+                    sumMatrix[i+1][j+1] = sumMatrix[i][j+1] + sumMatrix[i+1][j] + matrix[i][j] -sumMatrix[i][j] ;
+                }
+            }
+        }
+
+    }
+
+    public static int sumRegion(int row1, int col1, int row2, int col2) {
+        return sumMatrix[row2+1][col2+1]-sumMatrix[row2+1][col1] - sumMatrix[row1][col2+1] + sumMatrix[row1][col1];
+    }
+    /**
+     * 303. 区域和检索 - 数组不可变
+     */
+    static int[] sums;
+    public LeetCode(int[] nums){
+        sums = new int[nums.length+1];
+        for(int i = 0;i<nums.length;i++){
+            sums[i+1] = sums[i] + nums[i];
+        }
+    }
+
+    public static int sumRangeMine(int left, int right) {
+        return sums[right + 1] - sums[left];
+    }
+
+    /**
+     * 173. 二叉搜索树迭代器
+     */
+    public static class BSTIterator {
+        Deque<TreeNode> deque;
+
+        public BSTIterator(TreeNode root) {
+            deque = new LinkedList<>();
+            if (root!=null){
+                deque.push(root);
+                while (root.left!=null){
+                    root = root.left;
+                    deque.push(root);
+                }
+            }
+        }
+
+        public int next() {
+            TreeNode treeNode = deque.pop();
+            int val = treeNode.val;
+            if (treeNode.right!=null){
+                deque.push(treeNode.right);
+                treeNode = treeNode.right;
+                while (treeNode.left!=null){
+                    treeNode = treeNode.left;
+                    deque.push(treeNode);
+                }
+            }
+            return val;
+        }
+
+        public boolean hasNext() {
+            return !deque.isEmpty();
+        }
     }
 
     /**
@@ -1925,4 +2054,17 @@ public class LeetCode {
 
         return true;
     }
+
+     public static class TreeNode {
+          int val;
+          TreeNode left;
+          TreeNode right;
+          TreeNode() {}
+          TreeNode(int val) { this.val = val; }
+          TreeNode(int val, TreeNode left, TreeNode right) {
+              this.val = val;
+              this.left = left;
+              this.right = right;
+          }
+      }
 }
