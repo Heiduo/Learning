@@ -1,11 +1,11 @@
-//package src.com.heiduo;
-  package com.heiduo;
+package src.com.heiduo;
+//   package com.heiduo;
 /*
  * @Description:
  * @Version: 2.0
  * @Autor: Heiduo
  * @Date: 2021-03-01 15:28:37
- * @LastEditTime: 2021-03-27 09:34:30
+ * @LastEditTime: 2021-03-29 09:53:16
  * @Contact: heiduox@163.com
  */
 
@@ -253,6 +253,37 @@ public class LeetCode {
 //        while (iterator.hasNext()){
 //            System.out.println("result: " + iterator.next());
 //        }
+        /**
+         * 190. 颠倒二进制位
+         */
+        System.out.println("result: " + reverseBits(-3));
+    }
+
+    /**
+     * 190. 颠倒二进制位
+     * @param n
+     * @return
+     */
+    public static int reverseBits(int n) {
+        int result = 0;
+        for (int i = 0; i < 32 && n!=0; i++) {
+            //从最低位开始计算，每枚举一位，右移一位，当n为0时结束循环
+            result |= (n&1)<<(31-i);
+            n>>>=1;
+        }
+
+        return result;
+    }
+
+    public static int reverseBitsMine(int n) {
+        int result = 0;
+        for (int i = 0; i < 32; i++) {
+            int temp = n;
+            //将对应位置符号左右置0，再移至对应位置
+            result = result | (((temp<<i)>>>31)<<i);
+        }
+
+        return result;
     }
 
     /**
