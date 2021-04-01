@@ -1,5 +1,5 @@
-package src.com.heiduo;
-//   package com.heiduo;
+//package src.com.heiduo;
+   package com.heiduo;
 /*
  * @Description:
  * @Version: 2.0
@@ -261,7 +261,57 @@ public class LeetCode {
         /**
          * 90. 子集 II
          */
-        System.out.println("result: " + subsetsWithDupMine(new int[]{1,2,2,3}));
+//        System.out.println("result: " + subsetsWithDupMine(new int[]{1,2,2,3}));
+        /**
+         * 1006. 笨阶乘
+         */
+        System.out.println("result: " + clumsyMine(10));
+    }
+
+    /**
+     * 1006. 笨阶乘
+     * @param N
+     * @return
+     */
+    public static int clumsy(int N){
+        if (N == 1) {
+            return 1;
+        } else if (N == 2) {
+            return 2;
+        } else if (N == 3) {
+            return 6;
+        } else if (N == 4) {
+            return 7;
+        }
+
+        if (N % 4 == 0) {
+            return N + 1;
+        } else if (N % 4 <= 2) {
+            return N + 2;
+        } else {
+            return N - 1;
+        }
+    }
+
+    public static int clumsyMine(int N) {
+        int[] data = new int[N+7];
+        data[1] = 1;
+        data[2] = 2;
+        data[3] = 3*2;
+        data[4] = 4*3/2+1;
+        data[5] = 5*4/3+2-1;
+        data[6] = 6*5/4+3-2;
+        data[7] = 7*6/5+4-3*2;
+        if (N>7){
+            int divide = N/4;
+            int mol = N%4;
+            for (int i = 2; i <= divide; i++) {
+                int position = i*4 + mol;
+                data[position] = data[position-4] + position*(position-1)/(position-2) + position - 3 -
+                        (position-4)*(position-5)/(position-6)- (position-4)*(position-5)/(position-6);
+            }
+        }
+        return data[N];
     }
 
     /**
