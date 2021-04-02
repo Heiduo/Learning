@@ -265,7 +265,65 @@ public class LeetCode {
         /**
          * 1006. 笨阶乘
          */
-        System.out.println("result: " + clumsyMine(10));
+//        System.out.println("result: " + clumsyMine(10));
+
+        /**
+         * 面试题 17.21. 直方图的水量
+         */
+        System.out.println("result: " + trap(new int[]{0,1,0,2,1,0,1,3,2,1,2,1}));
+    }
+
+    /**
+     * 面试题 17.21. 直方图的水量
+     * @param height
+     * @return
+     */
+    //单调栈
+    public static int trap(int[] height){
+        int result = 0;
+        Deque<Integer> stack = new LinkedList<>();
+        for (int i = 0; i < height.length; i++) {
+            while (!stack.isEmpty() && height[i] > height[stack.peek()]){
+                int top = stack.pop();
+                if (stack.isEmpty()){
+                    break;
+                }
+                int left = stack.peek();
+                int currWidth = i - left - 1;
+                int currHeight = Math.min(height[left],height[i]) - height[top];
+                result += currHeight*currWidth;
+            }
+            stack.push(i);
+        }
+
+        return result;
+    }
+
+    public static int trapMine(int[] height) {
+        int result = 0;
+        int max = 0;
+        int lastPosition = 0;
+        for (int i = 0; i < height.length; i++) {
+            if (max == 0 && height[i]>=max){
+                max = height[i];
+                lastPosition = i;
+            }
+            if (i>0 && height[i]>height[i-1]){
+                for (int j = lastPosition + 1; j < i; j++) {
+                    int min = Math.min(height[i],max);
+                    if (height[j]<min){
+                        result += min - height[j];
+                        height[j] = min;
+                    }
+                }
+                if (height[i]>=max){
+                    max = height[i];
+                    lastPosition = i;
+                }
+            }
+        }
+
+        return result;
     }
 
     /**
