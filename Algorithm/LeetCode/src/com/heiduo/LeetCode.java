@@ -1,5 +1,5 @@
 //package src.com.heiduo;
-   package com.heiduo;
+package com.heiduo;
 /*
  * @Description:
  * @Version: 2.0
@@ -10,13 +10,7 @@
  */
 
 import java.lang.*;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Stack;
-import java.util.Arrays;
-import java.util.Deque;
-import java.util.LinkedList;
+import java.util.*;
 
 public class LeetCode {
     private static Stack<Integer> s1, s2;
@@ -185,7 +179,7 @@ public class LeetCode {
         //         ,217983653
         //         ,336916467));
         // System.out.println("result: " + hammingWeightOther2(-3));
-    
+
         /**
          * 402. 移掉K位数字
          */
@@ -270,28 +264,175 @@ public class LeetCode {
         /**
          * 面试题 17.21. 直方图的水量
          */
-        System.out.println("result: " + trap(new int[]{0,1,0,2,1,0,1,3,2,1,2,1}));
+//        System.out.println("result: " + trap(new int[]{0,1,0,2,1,0,1,3,2,1,2,1}));
+
+        /**
+         * 1143. 最长公共子序列
+         */
+//        System.out.println("result: " + longestCommonSubsequenceMine("ab", "acb"));
+
+        /**
+         *781. 森林中的兔子
+         */
+//        System.out.println("result: " + numRabbitsMine(new int[]{10,10,10}));
+
+        /**
+         * 88. 合并两个有序数组
+         */
+        mergeMine2(new int[]{1,2,3,0,0,0},3,new int[]{2,4,5},3);
+        System.out.println("result: ");
+
+    }
+
+    /**
+     * 88. 合并两个有序数组
+     * @param nums1
+     * @param m
+     * @param nums2
+     * @param n
+     */
+    public static void mergeMine3(int[] nums1, int m, int[] nums2, int n){
+        for (int i = 0; i < n; i++) {
+            nums1[m+i] = nums2[i];
+        }
+        Arrays.sort(nums1);
+
+    }
+
+    public static void mergeMine2(int[] nums1, int m, int[] nums2, int n) {
+        if(n==0){
+            return ;
+        }
+        for (int i = 0; i < n; i++) {
+            nums1[m+i] = nums2[i];
+        }
+
+        //排序
+        quickSort(nums1,0,m+n -1);
+    }
+
+    /**
+     * 快排
+     * @param data
+     * @param startIndex
+     * @param endIndex
+     */
+    public static void quickSort(int[] data, int startIndex, int endIndex){
+        if (startIndex>=endIndex){
+            return;
+        }
+        int start = startIndex;
+        int end = endIndex;
+        int target = data[startIndex];
+        int temp = 0;
+        while(start<end){
+            while(start<end && data[end] >target){
+                end--;
+            }
+            while(start<end & data[start]<=target){
+                start++;
+            }
+            temp = data[start];
+            data[start] = data[end];
+            data[end] = temp;
+        }
+        data[startIndex] = data[start];
+        data[start] = target;
+        //递归
+        quickSort(data,startIndex,end-1);
+        quickSort(data,start+1,endIndex);
+    }
+
+    public static void mergeMine(int[] nums1, int m, int[] nums2, int n) {
+        int[] nums3 = new int[n+m];
+        int n1=0,m1 =0,position=0;
+        while(n1<n&&m1<m){
+            nums3[position++] = nums1[m1]<=nums2[n1] ? nums1[m1++]:nums2[n1++];
+        }
+        while (n1<n){
+            nums3[position++] = nums2[n1++];
+        }
+        while (m1<m){
+            nums3[position++] = nums1[m1++];
+        }
+        nums1 = nums3;
+        for (int i = 0; i < m + n; i++) {
+            nums1[i] = nums3[i];
+        }
+    }
+
+    /**
+     * 781. 森林中的兔子
+     * @param answers
+     * @return
+     */
+    public static int numRabbitsMine(int[] answers) {
+        Map<Integer,Integer> map = new HashMap<>();
+        int result = 0;
+        for (int i = 0; i < answers.length; i++) {
+            if (!map.containsKey(answers[i]) || map.get(answers[i]) == 0){
+                result += answers[i] + 1;
+                map.put(answers[i],answers[i]);
+            }else {
+                int num = map.get(answers[i]);
+                map.put(answers[i],num-1);
+            }
+        }
+
+        return result;
+    }
+
+    /**
+     * 1143. 最长公共子序列
+     * 给定两个字符串 text1 和 text2，返回这两个字符串的最长 公共子序列 的长度。如果不存在 公共子序列 ，返回 0 。
+     *
+     * @param text1
+     * @param text2
+     * @return
+     */
+    public static int longestCommonSubsequenceMine(String text1, String text2) {
+        char[] tArray = text1.toCharArray();
+        char[] sArray = text2.toCharArray();
+        int n = tArray.length;
+        int m = sArray.length;
+        if (n == 0 || m == 0) {
+            return 0;
+        }
+        int[][] dp = new int[n + 1][m + 1];
+
+        for (int i = 1; i < n + 1; i++) {
+            for (int j = 1; j < m + 1; j++) {
+                if (tArray[i-1] == sArray[j-1]) {
+                    dp[i][j] = dp[i - 1][j - 1] + 1;
+                } else {
+                    dp[i][j] = Math.max(dp[i][j-1],dp[i-1][j]);
+                }
+            }
+        }
+
+        return dp[n][m];
     }
 
     /**
      * 面试题 17.21. 直方图的水量
+     *
      * @param height
      * @return
      */
     //单调栈
-    public static int trap(int[] height){
+    public static int trap(int[] height) {
         int result = 0;
         Deque<Integer> stack = new LinkedList<>();
         for (int i = 0; i < height.length; i++) {
-            while (!stack.isEmpty() && height[i] > height[stack.peek()]){
+            while (!stack.isEmpty() && height[i] > height[stack.peek()]) {
                 int top = stack.pop();
-                if (stack.isEmpty()){
+                if (stack.isEmpty()) {
                     break;
                 }
                 int left = stack.peek();
                 int currWidth = i - left - 1;
-                int currHeight = Math.min(height[left],height[i]) - height[top];
-                result += currHeight*currWidth;
+                int currHeight = Math.min(height[left], height[i]) - height[top];
+                result += currHeight * currWidth;
             }
             stack.push(i);
         }
@@ -304,19 +445,19 @@ public class LeetCode {
         int max = 0;
         int lastPosition = 0;
         for (int i = 0; i < height.length; i++) {
-            if (max == 0 && height[i]>=max){
+            if (max == 0 && height[i] >= max) {
                 max = height[i];
                 lastPosition = i;
             }
-            if (i>0 && height[i]>height[i-1]){
+            if (i > 0 && height[i] > height[i - 1]) {
                 for (int j = lastPosition + 1; j < i; j++) {
-                    int min = Math.min(height[i],max);
-                    if (height[j]<min){
+                    int min = Math.min(height[i], max);
+                    if (height[j] < min) {
                         result += min - height[j];
                         height[j] = min;
                     }
                 }
-                if (height[i]>=max){
+                if (height[i] >= max) {
                     max = height[i];
                     lastPosition = i;
                 }
@@ -328,10 +469,11 @@ public class LeetCode {
 
     /**
      * 1006. 笨阶乘
+     *
      * @param N
      * @return
      */
-    public static int clumsy(int N){
+    public static int clumsy(int N) {
         if (N == 1) {
             return 1;
         } else if (N == 2) {
@@ -352,21 +494,21 @@ public class LeetCode {
     }
 
     public static int clumsyMine(int N) {
-        int[] data = new int[N+7];
+        int[] data = new int[N + 7];
         data[1] = 1;
         data[2] = 2;
-        data[3] = 3*2;
-        data[4] = 4*3/2+1;
-        data[5] = 5*4/3+2-1;
-        data[6] = 6*5/4+3-2;
-        data[7] = 7*6/5+4-3*2;
-        if (N>7){
-            int divide = N/4;
-            int mol = N%4;
+        data[3] = 3 * 2;
+        data[4] = 4 * 3 / 2 + 1;
+        data[5] = 5 * 4 / 3 + 2 - 1;
+        data[6] = 6 * 5 / 4 + 3 - 2;
+        data[7] = 7 * 6 / 5 + 4 - 3 * 2;
+        if (N > 7) {
+            int divide = N / 4;
+            int mol = N % 4;
             for (int i = 2; i <= divide; i++) {
-                int position = i*4 + mol;
-                data[position] = data[position-4] + position*(position-1)/(position-2) + position - 3 -
-                        (position-4)*(position-5)/(position-6)- (position-4)*(position-5)/(position-6);
+                int position = i * 4 + mol;
+                data[position] = data[position - 4] + position * (position - 1) / (position - 2) + position - 3 -
+                        (position - 4) * (position - 5) / (position - 6) - (position - 4) * (position - 5) / (position - 6);
             }
         }
         return data[N];
@@ -376,6 +518,7 @@ public class LeetCode {
      * 90. 子集 II
      * 给你一个整数数组 nums ，其中可能包含重复元素，请你返回该数组所有可能的子集（幂集）。
      * 解集 不能 包含重复的子集。返回的解集中，子集可以按 任意顺序 排列。
+     *
      * @param nums
      * @return
      */
@@ -386,41 +529,42 @@ public class LeetCode {
         List<Integer> data = new ArrayList<>();
         result.add(data);
         for (int i = 0; i < length; i++) {
-            if(i==0 || nums[i]!=nums[i-1]){
+            if (i == 0 || nums[i] != nums[i - 1]) {
                 List<Integer> data2 = new ArrayList<>();
                 data2.add(nums[i]);
-                dfs90(data2,nums,i,result);
+                dfs90(data2, nums, i, result);
             }
         }
         return result;
     }
 
-    public static void dfs90(List<Integer> data,int[] nums,int position,List<List<Integer>> result){
+    public static void dfs90(List<Integer> data, int[] nums, int position, List<List<Integer>> result) {
         result.add(data);
-        if(position == nums.length -1){
+        if (position == nums.length - 1) {
             return;
         }
         for (int i = position + 1; i < nums.length; i++) {
-            if(i==position + 1 || nums[i]!=nums[i-1]){
+            if (i == position + 1 || nums[i] != nums[i - 1]) {
                 List<Integer> data2 = new ArrayList<>();
                 data2.addAll(data);
                 data2.add(nums[i]);
-                dfs90(data2,nums,i,result);
+                dfs90(data2, nums, i, result);
             }
         }
     }
 
     /**
      * 190. 颠倒二进制位
+     *
      * @param n
      * @return
      */
     public static int reverseBits(int n) {
         int result = 0;
-        for (int i = 0; i < 32 && n!=0; i++) {
+        for (int i = 0; i < 32 && n != 0; i++) {
             //从最低位开始计算，每枚举一位，右移一位，当n为0时结束循环
-            result |= (n&1)<<(31-i);
-            n>>>=1;
+            result |= (n & 1) << (31 - i);
+            n >>>= 1;
         }
 
         return result;
@@ -431,7 +575,7 @@ public class LeetCode {
         for (int i = 0; i < 32; i++) {
             int temp = n;
             //将对应位置符号左右置0，再移至对应位置
-            result = result | (((temp<<i)>>>31)<<i);
+            result = result | (((temp << i) >>> 31) << i);
         }
 
         return result;
@@ -439,6 +583,7 @@ public class LeetCode {
 
     /**
      * 131. 分割回文串
+     *
      * @param s
      * @return
      */
@@ -449,21 +594,23 @@ public class LeetCode {
         int length = data.length;
         boolean[][] f = new boolean[length][length];
         for (int i = 0; i < length; i++) {
-            for (int j = i; j >=0 ; j--) {
-                if (i-j==1){
+            for (int j = i; j >= 0; j--) {
+                if (i - j == 1) {
                     f[i][j] = f[j][i] = data[i] == data[j];
-                }else{
-                    f[i][j] = f[j][i] = data[i] == data[j] && f[j+1][i-1];
+                } else {
+                    f[i][j] = f[j][i] = data[i] == data[j] && f[j + 1][i - 1];
                 }
             }
         }
 
         return result;
     }
+
     boolean[][] f;
     List<List<String>> ret = new ArrayList<List<String>>();
     List<String> ans = new ArrayList<String>();
     int n;
+
     public void dfs(String s, int i) {
         if (i == n) {
             ret.add(new ArrayList<String>(ans));
@@ -482,14 +629,15 @@ public class LeetCode {
      * 304. 二维区域和检索 - 矩阵不可变
      */
     static int[][] sumMatrix;
-    public LeetCode(int[][] matrix){
+
+    public LeetCode(int[][] matrix) {
         int rows = matrix.length;
-        if (rows>0){
+        if (rows > 0) {
             int columns = matrix[0].length;
-            sumMatrix = new int[rows +1][columns+1];
+            sumMatrix = new int[rows + 1][columns + 1];
             for (int i = 0; i < rows; i++) {
                 for (int j = 0; j < columns; j++) {
-                    sumMatrix[i+1][j+1] = sumMatrix[i][j+1] + sumMatrix[i+1][j] + matrix[i][j] -sumMatrix[i][j] ;
+                    sumMatrix[i + 1][j + 1] = sumMatrix[i][j + 1] + sumMatrix[i + 1][j] + matrix[i][j] - sumMatrix[i][j];
                 }
             }
         }
@@ -497,16 +645,18 @@ public class LeetCode {
     }
 
     public static int sumRegion(int row1, int col1, int row2, int col2) {
-        return sumMatrix[row2+1][col2+1]-sumMatrix[row2+1][col1] - sumMatrix[row1][col2+1] + sumMatrix[row1][col1];
+        return sumMatrix[row2 + 1][col2 + 1] - sumMatrix[row2 + 1][col1] - sumMatrix[row1][col2 + 1] + sumMatrix[row1][col1];
     }
+
     /**
      * 303. 区域和检索 - 数组不可变
      */
     static int[] sums;
-    public LeetCode(int[] nums){
-        sums = new int[nums.length+1];
-        for(int i = 0;i<nums.length;i++){
-            sums[i+1] = sums[i] + nums[i];
+
+    public LeetCode(int[] nums) {
+        sums = new int[nums.length + 1];
+        for (int i = 0; i < nums.length; i++) {
+            sums[i + 1] = sums[i] + nums[i];
         }
     }
 
@@ -522,9 +672,9 @@ public class LeetCode {
 
         public BSTIterator(TreeNode root) {
             deque = new LinkedList<>();
-            if (root!=null){
+            if (root != null) {
                 deque.push(root);
-                while (root.left!=null){
+                while (root.left != null) {
                     root = root.left;
                     deque.push(root);
                 }
@@ -534,10 +684,10 @@ public class LeetCode {
         public int next() {
             TreeNode treeNode = deque.pop();
             int val = treeNode.val;
-            if (treeNode.right!=null){
+            if (treeNode.right != null) {
                 deque.push(treeNode.right);
                 treeNode = treeNode.right;
-                while (treeNode.left!=null){
+                while (treeNode.left != null) {
                     treeNode = treeNode.left;
                     deque.push(treeNode);
                 }
@@ -552,19 +702,20 @@ public class LeetCode {
 
     /**
      * 61. 旋转链表
+     *
      * @param head
      * @param k
      * @return
      */
     public static ListNode rotateRightMine(ListNode head, int k) {
-        if(head == null){
+        if (head == null) {
             return null;
         }
         ListNode pre = head;
         int length = 1;
-        while(head.next != null){
+        while (head.next != null) {
             head = head.next;
-            length ++;
+            length++;
         }
         head.next = pre;
         int position = length - k % length;
@@ -578,43 +729,45 @@ public class LeetCode {
 
     /**
      * 83. 删除排序链表中的重复元素
+     *
      * @param head
      * @return
      */
-    public static ListNode deleteDuplicates83Mine(ListNode head){
-        if(head == null){
+    public static ListNode deleteDuplicates83Mine(ListNode head) {
+        if (head == null) {
             return null;
         }
-        ListNode pre = new ListNode(-1,head);
-        while(head.next!=null){
-            if(head.val == head.next.val){
+        ListNode pre = new ListNode(-1, head);
+        while (head.next != null) {
+            if (head.val == head.next.val) {
                 head.next = head.next.next;
-            }else{
+            } else {
                 head = head.next;
             }
         }
 
-        return pre.next; 
+        return pre.next;
     }
 
     /**
      * 82. 删除排序链表中的重复元素 II
+     *
      * @param head
      * @return
      */
-    public static ListNode deleteDuplicates(ListNode head){
-        if(head == null){
+    public static ListNode deleteDuplicates(ListNode head) {
+        if (head == null) {
             return null;
         }
-        ListNode pre = new ListNode(0,head);
+        ListNode pre = new ListNode(0, head);
         ListNode node = pre;
-        while(pre.next!=null && pre.next.next!=null){
-            if(pre.next.val == pre.next.next.val){
+        while (pre.next != null && pre.next.next != null) {
+            if (pre.next.val == pre.next.next.val) {
                 int x = pre.next.val;
-                while(pre.next!=null && pre.next.val==x){
+                while (pre.next != null && pre.next.val == x) {
                     pre.next = pre.next.next;
                 }
-            }else{
+            } else {
                 pre = pre.next;
             }
         }
@@ -623,31 +776,31 @@ public class LeetCode {
     }
 
     //比上面方法耗时少 100%
-    public static ListNode deleteDuplicatesMine(ListNode head){
-        if(head == null){
+    public static ListNode deleteDuplicatesMine(ListNode head) {
+        if (head == null) {
             return null;
         }
         ListNode pre = new ListNode(Integer.MIN_VALUE);
         pre.next = head;
         ListNode node = pre;
-                
+
         boolean equal = false;
         head = head.next;
-        while(head!= null){
-            if(pre.next.val == head.val){
+        while (head != null) {
+            if (pre.next.val == head.val) {
                 equal = true;
                 pre.next.next = head.next;
-            }else{
-                if(equal){
+            } else {
+                if (equal) {
                     pre.next = head;
                     equal = false;
-                }else{
+                } else {
                     pre = pre.next;
                 }
             }
             head = head.next;
         }
-        if(equal){
+        if (equal) {
             pre.next = head;
             equal = false;
         }
@@ -656,28 +809,29 @@ public class LeetCode {
 
     /**
      * 456. 132 模式
+     *
      * @param nums
      * @return
      */
-    public static boolean find132pattern(int[] nums){
-        int length  = nums.length;
-        if (length<3){
+    public static boolean find132pattern(int[] nums) {
+        int length = nums.length;
+        if (length < 3) {
             return false;
         }
         Deque<Integer> deque = new LinkedList<>();
-        deque.push(nums[length-1]);
+        deque.push(nums[length - 1]);
         int maxT = Integer.MIN_VALUE;
 
-        for (int i = length-1; i >=0 ; i--) {
-            if (nums[i] < maxT){
+        for (int i = length - 1; i >= 0; i--) {
+            if (nums[i] < maxT) {
                 return true;
             }
 
-            while(!deque.isEmpty() && nums[i] > deque.peek()){
+            while (!deque.isEmpty() && nums[i] > deque.peek()) {
                 maxT = deque.pop();
             }
 
-            if (nums[i] > maxT){
+            if (nums[i] > maxT) {
                 deque.push(nums[i]);
             }
         }
@@ -687,18 +841,18 @@ public class LeetCode {
 
     //暴力解法 O(n^2)
     public static boolean find132patternMine(int[] nums) {
-        int length  = nums.length;
-        if (length<3){
+        int length = nums.length;
+        if (length < 3) {
             return false;
         }
 
         int min = Integer.MAX_VALUE;
         for (int i = 1; i < length - 1; i++) {
-            if(min > nums[i-1] && nums[i-1]<nums[i]){
-                min = nums[i-1];
+            if (min > nums[i - 1] && nums[i - 1] < nums[i]) {
+                min = nums[i - 1];
             }
-            for (int j = i+1; j < length; j++) {
-                if(nums[j]<nums[i] && nums[j]>min){
+            for (int j = i + 1; j < length; j++) {
+                if (nums[j] < nums[i] && nums[j] > min) {
                     return true;
                 }
             }
@@ -710,15 +864,15 @@ public class LeetCode {
      * 402. 移掉K位数字
      */
 
-    public static String removeKdigitsMine2(String num, int k){
+    public static String removeKdigitsMine2(String num, int k) {
         LinkedList<Character> stack = new LinkedList<>();
         int length = num.length();
-        if(k>=length){
+        if (k >= length) {
             return "0";
         }
         char[] data = num.toCharArray();
         for (int i = 0; i < length; i++) {
-            while(!stack.isEmpty() && k>0 && stack.peekLast() >data[i] ){
+            while (!stack.isEmpty() && k > 0 && stack.peekLast() > data[i]) {
                 stack.pollLast();
                 k--;
             }
@@ -743,35 +897,35 @@ public class LeetCode {
     //错误输入  112 1
     public static String removeKdigitsMine(String num, int k) {
         int length = num.length();
-        if(k>=length){
+        if (k >= length) {
             return "0";
         }
         char[] data = num.toCharArray();
-        char min = '9' + 1 ;
+        char min = '9' + 1;
         int last = -1;
         for (int i = 0; i <= k; i++) {
-            if(data[i]<min){
+            if (data[i] < min) {
                 min = data[i];
-                if(last == -1){
+                if (last == -1) {
                     last = i;
-                }else{
+                } else {
                     data[last] = 'a';
                 }
-            }else{
+            } else {
                 data[i] = 'a';
             }
         }
         String result = String.valueOf(data);
-        result = result.replaceAll("a","");
+        result = result.replaceAll("a", "");
         return String.valueOf(Integer.valueOf(result));
-        
+
     }
 
     /**
      * 341. 扁平化嵌套列表迭代器
      * @return
      */
-    
+
 
     /***
      * 191. 位1的个数
@@ -780,9 +934,9 @@ public class LeetCode {
      */
     public static int hammingWeightOther3(int n) {
         int result = 0;
-        while(n!=0){
+        while (n != 0) {
             //n & (n−1)，其预算结果恰为把 n 的二进制位中的最低位的 1 变为 0 之后的结果
-            n = n & (n-1);
+            n = n & (n - 1);
             result++;
         }
         return result;
@@ -791,7 +945,7 @@ public class LeetCode {
     public static int hammingWeightOther2(int n) {
         int result = 0;
         for (int i = 0; i < 32; i++) {
-            if((n & (1 << i)) !=0){
+            if ((n & (1 << i)) != 0) {
                 result++;
             }
         }
@@ -811,80 +965,81 @@ public class LeetCode {
     public static int hammingWeightMine(int n) {
         int result = 0;
         for (int i = 0; i < 32; i++) {
-            if(Math.abs(n)%2==1){
+            if (Math.abs(n) % 2 == 1) {
                 result++;
             }
-            n = n>>>1;
+            n = n >>> 1;
         }
         return result;
     }
 
     /**
      * 1201. 丑数 III
+     *
      * @param n
      * @param a
      * @param b
      * @param c
      * @return
      */
-    public static int nthUglyNumberMine2(int n, int a, int b, int c){
-        if (a==1||b==1||c==1) return n;
+    public static int nthUglyNumberMine2(int n, int a, int b, int c) {
+        if (a == 1 || b == 1 || c == 1) return n;
         //两两最小公倍数
-        long lcmAB = lcm(a,b);
-        long lcmAC = lcm(a,c);
-        long lcmBC = lcm(b,c);
+        long lcmAB = lcm(a, b);
+        long lcmAC = lcm(a, c);
+        long lcmBC = lcm(b, c);
         //三个
-        long lcmaABC = lcm(lcmAB,c);
+        long lcmaABC = lcm(lcmAB, c);
 
-        int min = Math.min(Math.min(a,b),c);
-        long left = min,right = n * min;
+        int min = Math.min(Math.min(a, b), c);
+        long left = min, right = n * min;
 
-        while (left<=right){
-            long mid = left + (right-left)/2;
-            long count = mid/a + mid/b +mid/c - mid/lcmAB - mid/lcmAC - mid/lcmBC + mid/lcmaABC;
-            if (count == n){
+        while (left <= right) {
+            long mid = left + (right - left) / 2;
+            long count = mid / a + mid / b + mid / c - mid / lcmAB - mid / lcmAC - mid / lcmBC + mid / lcmaABC;
+            if (count == n) {
                 left = mid;
                 break;
-            }else if (count<n){
+            } else if (count < n) {
                 left = mid + 1;
-            }else {
-                right = mid-1;
+            } else {
+                right = mid - 1;
             }
         }
-        return (int) (left - Math.min(left%a,Math.min(left%b,left%c)));
+        return (int) (left - Math.min(left % a, Math.min(left % b, left % c)));
     }
 
     //最小公倍数
-    public static long lcm(long a, long b){
-        return a*b/gcd(a,b);
+    public static long lcm(long a, long b) {
+        return a * b / gcd(a, b);
     }
 
     //最大公因数
-    public static long gcd(long a, long b){
-        if (a==0) return b;
-        return gcd(b%a,a);
+    public static long gcd(long a, long b) {
+        if (a == 0) return b;
+        return gcd(b % a, a);
     }
 
     //int越界 long超时。。。
     public static int nthUglyNumberMine(int n, int a, int b, int c) {
-        long result = 0,resultCount = 0;
-        long a1 = a,b1 = b,c1 = c;
-        long aCount = 1,bCount = 1,cCount = 1;
-        while (resultCount < n){
-            result = Math.min(a1,Math.min(b1,c1));
-            if (a1 == result){
+        long result = 0, resultCount = 0;
+        long a1 = a, b1 = b, c1 = c;
+        long aCount = 1, bCount = 1, cCount = 1;
+        while (resultCount < n) {
+            result = Math.min(a1, Math.min(b1, c1));
+            if (a1 == result) {
                 aCount++;
-                a1 = a*aCount;
+                a1 = a * aCount;
             }
-            if (b1 == result){
+            if (b1 == result) {
                 bCount++;
-                b1 = b*bCount;
+                b1 = b * bCount;
             }
-            if (c1 == result){
+            if (c1 == result) {
                 cCount++;
-                c1 = c*cCount;
+                c1 = c * cCount;
             }
-            resultCount ++;
+            resultCount++;
         }
 
         return (int) result;
@@ -901,14 +1056,14 @@ public class LeetCode {
         }
         int rows = matrix.length;
         int columns = matrix[0].length;
-        boolean flagRow = false,flagColumn = false;
+        boolean flagRow = false, flagColumn = false;
         for (int i = 0; i < columns; i++) {
-            if(matrix[0][i] == 0){
+            if (matrix[0][i] == 0) {
                 flagRow = true;
             }
         }
         for (int i = 0; i < rows; i++) {
-            if (matrix[i][0] == 0){
+            if (matrix[i][0] == 0) {
                 flagColumn = true;
             }
         }
@@ -928,13 +1083,13 @@ public class LeetCode {
             }
         }
 
-        if (flagRow){
+        if (flagRow) {
             for (int i = 0; i < columns; i++) {
                 matrix[0][i] = 0;
             }
         }
 
-        if (flagColumn){
+        if (flagColumn) {
             for (int i = 0; i < rows; i++) {
                 matrix[i][0] = 0;
             }
@@ -958,7 +1113,7 @@ public class LeetCode {
 
         for (int i = 0; i < columns.length; i++) {
             for (int j = 0; j < rows.length; j++) {
-                if (rows[i] || columns[j]){
+                if (rows[i] || columns[j]) {
                     matrix[j][i] = 0;
                 }
             }
@@ -1198,6 +1353,7 @@ public class LeetCode {
 
     /**
      * 115. 不同的子序列
+     * 给定一个字符串 s 和一个字符串 t ，计算在 s 的子序列中 t 出现的个数。
      */
     public static int numDistinctMine(String s, String t) {
         char[] tArray = t.toCharArray();
@@ -2237,16 +2393,22 @@ public class LeetCode {
         return true;
     }
 
-     public static class TreeNode {
-          int val;
-          TreeNode left;
-          TreeNode right;
-          TreeNode() {}
-          TreeNode(int val) { this.val = val; }
-          TreeNode(int val, TreeNode left, TreeNode right) {
-              this.val = val;
-              this.left = left;
-              this.right = right;
-          }
-      }
+    public static class TreeNode {
+        int val;
+        TreeNode left;
+        TreeNode right;
+
+        TreeNode() {
+        }
+
+        TreeNode(int val) {
+            this.val = val;
+        }
+
+        TreeNode(int val, TreeNode left, TreeNode right) {
+            this.val = val;
+            this.left = left;
+            this.right = right;
+        }
+    }
 }
