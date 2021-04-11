@@ -279,9 +279,107 @@ public class LeetCode {
         /**
          * 88. 合并两个有序数组
          */
-        mergeMine2(new int[]{1,2,3,0,0,0},3,new int[]{2,4,5},3);
-        System.out.println("result: ");
+//        mergeMine2(new int[]{1,2,3,0,0,0},3,new int[]{2,4,5},3);
+//        System.out.println("result: ");
 
+        /**
+         * 263. 丑数
+         */
+//        System.out.println("result: " + isUglyMine2(15));
+
+        /**
+         * 264. 丑数 II
+         */
+        System.out.println("result: " + nthUglyNumber(4));
+
+    }
+
+    /**
+     * 264. 丑数 II
+     * @param n
+     * @return
+     */
+
+    public static int nthUglyNumber(int n){
+        int[] dp = new int[n+1];
+        dp[1] = 1;
+        int p2 = 1, p3 = 1, p5= 1;
+        for (int i = 2; i <= n; i++) {
+            int num2 = dp[p2]*2,num3 = dp[p3]*3,num5 = dp[p5]*5;
+            dp[i] = Math.min(num2,Math.min(num3,num5));
+            if (dp[i] == num2){
+                p2++;
+            }
+            if (dp[i] == num3){
+                p3++;
+            }
+            if (dp[i] == num5){
+                p5++;
+            }
+        }
+        return dp[n];
+    }
+
+    public static int nthUglyNumberMine(int n) {
+        if (n<1){
+            return 0;
+        }
+        int[] factors = {2, 3, 5};
+        Set<Long> data = new HashSet<>();
+        PriorityQueue<Long> heep = new PriorityQueue<>();
+        data.add(1L);
+        heep.offer(1L);
+        int ugly = 0;
+        for (int i = 0; i < n; i++) {
+            long curr = heep.poll();
+            ugly = (int) curr;
+            for (int factor :
+                    factors) {
+                long next = curr * factor;
+                if (data.add(next)){
+                    heep.offer(next);
+                }
+            }
+        }
+        return ugly;
+    }
+
+    /**
+     * 263. 丑数
+     * @param n
+     * @return
+     */
+    public static boolean isUglyMine2(int n) {
+        if (n<1){
+            return false;
+        }
+        int[] data = new int[]{2,3,5};
+        for (int factor: data) {
+            while(n!=1 && n%factor == 0){
+                n = n/factor;
+            }
+        }
+        return n == 1;
+    }
+
+
+    public static boolean isUglyMine(int n) {
+        if (n<1){
+            return false;
+        }
+        while(n!=1 && n%2 == 0){
+            n = n/2;
+        }
+        while(n!=1 && n%3 == 0){
+            n = n/3;
+        }
+        while(n!=1 && n%5 == 0){
+            n = n/5;
+        }
+        if (n==1){
+            return true;
+        }
+        return  false;
     }
 
     /**
