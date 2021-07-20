@@ -7,5 +7,9 @@ LastEditTime: 2021-02-23 12:01:09
 Contact: heiduox@163.com
 '''
 class Solution:
-    def longestPalindrome(self, s: str) -> str:
+    def firstBadVersion(self, n):
+        """
+        :type n: int
+        :rtype: int
+        """
         
