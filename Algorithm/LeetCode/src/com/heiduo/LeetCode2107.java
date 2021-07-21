@@ -20,7 +20,77 @@ public class LeetCode2107 {
         /**
          * 35. 搜索插入位置
          */
-        System.out.println("data:" + searchInsertMine(new int[]{1,3,5,6},2));
+        // System.out.println("data:" + searchInsertMine(new int[]{1,3,5,6},2));
+
+        /**
+         * 977. 有序数组的平方
+         */
+        // System.out.println("data:" + Arrays.toString(sortedSquaresMine(new int[]{-7,-3,2,3,11})));
+
+        /**
+         * 189. 旋转数组
+         */
+        int[] data = new int[]{1,2,3,4};
+        rotateMine2(data,2);
+        System.out.println("data:" + Arrays.toString(data));
+    }
+
+
+    /**
+     * 189. 旋转数组
+     * 给定一个数组，将数组中的元素向右移动 k 个位置，其中 k 是非负数。
+     * @param nums
+     * @param k
+     */
+    public static void rotateMine2(int[] nums, int k) {
+        int length = nums.length;
+        k = k%length;
+        if(k==0){
+            return;
+        }
+        int pos = 0;
+        int last = nums[pos],next ;
+        while(pos!=k*length){
+            next = nums[(pos+k)%length];
+            nums[(pos+k)%length] = last;
+            last = next;
+            pos = pos + k;
+        }
+    }
+
+    public static void rotateMine(int[] nums, int k) {
+        int length = nums.length;
+        k = k%length;
+        int[] nums2= new int[length];
+        for (int i = 0; i < length; i++) {
+            nums2[i] = nums[(i-k+length)%length];
+        }
+        for (int i = 0; i < nums2.length; i++) {
+            nums[i] = nums2[i];
+        }
+    }
+
+    /**
+     * 977. 有序数组的平方
+     * 给你一个按 非递减顺序 排序的整数数组 nums，返回 每个数字的平方 组成的新数组，要求也按 非递减顺序 排序。
+     * @param nums
+     * @return
+     */
+    public static int[] sortedSquaresMine(int[] nums) {
+        int[] result = new int[nums.length];
+        int left = 0,right = nums.length - 1;
+        int pos = right;
+        while(left<=right){
+            if(Math.abs(nums[left])<Math.abs(nums[right])){
+                result[pos] = nums[right]*nums[right];
+                right--;
+            }else{
+                result[pos] = nums[left]*nums[left];
+                left++;
+            }
+            pos--;
+        }
+        return result;
     }
 
     /**
@@ -32,7 +102,7 @@ public class LeetCode2107 {
         Arrays.sort(nums);
         int max = 0;
         for (int i = 0; i < nums.length/2; i++) {
-            int value = nums[i] + nums[nums.length-i];
+            int value = nums[i] + nums[nums.length-i -1];
             if(max<value){
                 max = value;
             }
