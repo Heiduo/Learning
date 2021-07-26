@@ -30,11 +30,65 @@ public class LeetCode2107 {
         /**
          * 189. 旋转数组
          */
-        int[] data = new int[]{1,2,3,4};
-        rotateMine2(data,2);
-        System.out.println("data:" + Arrays.toString(data));
+        // int[] data = new int[]{1,2,3,4};
+        // rotate(data,2);
+        // System.out.println("data:" + Arrays.toString(data));
+
+        /**
+         * 283. 移动零
+         */
+        // int[] data = new int[]{0,1,0,3,0};
+        // moveZeroesMine(data);
+        // System.out.println("data:" + Arrays.toString(data));
+
+        /**
+         * 167. 两数之和 II - 输入有序数组
+         */
+        int[] data = new int[]{-1,0};
+    
+        System.out.println("data:" + Arrays.toString(twoSumMine(data,-1)));
     }
 
+    /**
+     * 167. 两数之和 II - 输入有序数组
+     * 给定一个已按照 升序排列  的整数数组 numbers ，请你从数组中找出两个数满足相加之和等于目标数 target 。
+     * @param numbers
+     * @param target
+     * @return
+     */
+    public static int[] twoSumMine(int[] numbers, int target) {
+        int left = 0,right = numbers.length-1;
+        int add = numbers[left] + numbers[right];
+        while(add!=target && left<right){
+            if(add>target){
+                right--;
+            }else{
+                left++;
+            }
+            add =  numbers[left] + numbers[right];
+        }
+        return new int[]{left+1,right+1};
+    }
+
+    /**
+     * 283. 移动零
+     * 给定一个数组 nums，编写一个函数将所有 0 移动到数组的末尾，同时保持非零元素的相对顺序。
+     * @param nums
+     */
+    public static void moveZeroesMine(int[] nums) {
+        int left = 0;
+        for (int i = 0; i < nums.length; i++) {
+            if(nums[i] == 0){
+                left++;
+            }else{
+                nums[i-left] = nums[i];
+            }
+            
+        }
+        for (int i = 0; i < left; i++) {
+            nums[nums.length-i-1] = 0;
+        }
+    }
 
     /**
      * 189. 旋转数组
@@ -42,7 +96,26 @@ public class LeetCode2107 {
      * @param nums
      * @param k
      */
+
+    public static void rotate(int[] nums, int k) {
+        k %= nums.length;
+        reverse(nums, 0, nums.length - 1);
+        reverse(nums, 0, k - 1);
+        reverse(nums, k, nums.length - 1);
+    }
+
+    public static void reverse(int[] nums, int start, int end) {
+        while (start < end) {
+            int temp = nums[start];
+            nums[start] = nums[end];
+            nums[end] = temp;
+            start += 1;
+            end -= 1;
+        }
+    }
+
     public static void rotateMine2(int[] nums, int k) {
+        //error
         int length = nums.length;
         k = k%length;
         if(k==0){
