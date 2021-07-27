@@ -44,9 +44,58 @@ public class LeetCode2107 {
         /**
          * 167. 两数之和 II - 输入有序数组
          */
-        int[] data = new int[]{-1,0};
-    
-        System.out.println("data:" + Arrays.toString(twoSumMine(data,-1)));
+        // int[] data = new int[]{-1,0};
+        // System.out.println("data:" + Arrays.toString(twoSumMine(data,-1)));
+
+        /**
+         * 344. 反转字符串
+         */
+        // reverseStringMine("Haha".toCharArray());
+
+        /**
+         * 557. 反转字符串中的单词 III
+         */
+        System.out.println("data:" + reverseWordsMine("Let's take LeetCode contest"));
+
+    }
+
+    /**
+     * 557. 反转字符串中的单词 III
+     * 给定一个字符串，你需要反转字符串中每个单词的字符顺序，同时仍保留空格和单词的初始顺序。
+     * @param s
+     * @return
+     */
+    public static String reverseWordsMine(String s) {
+        char[] data = s.toCharArray();
+        int left = 0,right = 0;
+        for (int i = 0; i < data.length; i++) {
+            if(data[i] == ' '){
+                right = i-1;
+                reverseStringMine(data, left, right);
+                left = i+1;
+            }
+        }
+        reverseStringMine(data, left, data.length-1);
+        return new String(data);
+    }
+
+
+    /**\
+     * 344. 反转字符串
+     * 编写一个函数，其作用是将输入的字符串反转过来。输入字符串以字符数组 char[] 的形式给出。
+     * 不要给另外的数组分配额外的空间，你必须原地修改输入数组、使用 O(1) 的额外空间解决这一问题
+     */
+    public static void reverseStringMine(char[] s,int left,int right) {
+        // int left = 0, right = s.length - 1;
+        char a;
+        while(left<right){
+            a = s[left];
+            s[left] = s[right];
+            s[right] = a;
+            ++left;
+            --right;
+        }
+        System.out.println("data:" + Arrays.toString(s));
     }
 
     /**
