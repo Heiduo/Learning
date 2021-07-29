@@ -5,6 +5,15 @@ import java.util.Arrays;
 import javax.lang.model.element.Element;
 
 public class LeetCode2107 {
+
+    public class ListNode {
+        int val;
+        ListNode next;
+        ListNode() {}
+        ListNode(int val) { this.val = val; }
+        ListNode(int val, ListNode next) { this.val = val; this.next = next; }
+    }
+ 
     public static void main(String[] args){
         /**
          * 704. 二分查找
@@ -57,6 +66,48 @@ public class LeetCode2107 {
          */
         System.out.println("data:" + reverseWordsMine("Let's take LeetCode contest"));
 
+    }
+
+    /**
+     * 876. 链表的中间结点
+     * 给定一个头结点为 head 的非空单链表，返回链表的中间结点。
+     * 如果有两个中间结点，则返回第二个中间结点。
+     * @param head
+     * @return
+     */
+    public ListNode middleNode(ListNode head) {
+        ListNode left = head;
+        int length = 0;
+        while(left.next!=null){
+            left = left.next;
+            length++;
+        }
+        int k = 0;
+        left = head;
+        while (k < length / 2) {
+            ++k;
+            cur = cur.next;
+        }
+        return left;
+    }
+
+    public ListNode middleNodeMine(ListNode head) {
+        ListNode left = head;
+        ListNode right = head;
+        int length = 0;
+        while(right.next!=null){
+            right = right.next;
+            length++;
+        }
+        if(length%2==1){
+            length = length/2 + 1;   
+        }else{
+            length = length/2;
+        }
+        for (int i = 0; i < length; i++) {
+            left = left.next;
+        }
+        return left;
     }
 
     /**
