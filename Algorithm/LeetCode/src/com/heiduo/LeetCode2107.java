@@ -86,7 +86,7 @@ public class LeetCode2107 {
         left = head;
         while (k < length / 2) {
             ++k;
-            cur = cur.next;
+//            cur = cur.next;
         }
         return left;
     }
