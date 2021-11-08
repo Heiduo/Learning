@@ -64,8 +64,33 @@ public class LeetCode2107 {
         /**
          * 557. 反转字符串中的单词 III
          */
-        System.out.println("data:" + reverseWordsMine("Let's take LeetCode contest"));
+        // System.out.println("data:" + reverseWordsMine("Let's take LeetCode contest"));
 
+    }
+
+    /**
+     * 19. 删除链表的倒数第 N 个结点
+     * 给你一个链表，删除链表的倒数第 n 个结点，并且返回链表的头结点。
+     * @param head
+     * @param n
+     * @return
+     */
+    public ListNode removeNthFromEndMine(ListNode head, int n) {
+        ListNode left = new ListNode();
+        left.next = head;
+        ListNode result = left,right = left;
+        for (int i = 0; i < n; i++) {
+            if(right!=null){
+                right=right.next;
+            }
+        }
+        while(right!=null && right.next!=null){
+            right=right.next;
+            left = left.next;
+        }
+        if(left.next!=null)
+            left.next=left.next.next;
+        return head;
     }
 
     /**
@@ -75,20 +100,34 @@ public class LeetCode2107 {
      * @param head
      * @return
      */
+    public ListNode middleNode2(ListNode head) {
+        if (head == null) {
+            return null;
+        }
+        ListNode slow = head;
+        ListNode fast = head;
+
+        while (fast != null && fast.next != null) {
+            slow = slow.next;
+            fast = fast.next.next;
+        }
+        return slow;
+    }
+
     public ListNode middleNode(ListNode head) {
-        ListNode left = head;
-        int length = 0;
-        while(left.next!=null){
-            left = left.next;
-            length++;
+        int n = 0;
+        ListNode cur = head;
+        while (cur != null) {
+            ++n;
+            cur = cur.next;
         }
         int k = 0;
-        left = head;
-        while (k < length / 2) {
+        cur = head;
+        while (k < n / 2) {
             ++k;
 //            cur = cur.next;
         }
-        return left;
+        return cur;
     }
 
     public ListNode middleNodeMine(ListNode head) {
