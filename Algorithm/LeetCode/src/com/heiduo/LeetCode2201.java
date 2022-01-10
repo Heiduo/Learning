@@ -3,6 +3,22 @@ package com.heiduo;
 import java.util.*;
 
 public class LeetCode2201 {
+
+    public static class ListNode {
+        int val;
+        ListNode next;
+        ListNode() {
+        }
+        ListNode(int val) {
+            this.val = val;
+        }
+
+        ListNode(int val, ListNode next) {
+            this.val = val;
+            this.next = next;
+        }
+    }
+
     public static void main(String[] args) {
 
         /***
@@ -64,12 +80,252 @@ public class LeetCode2201 {
         /**
          * 242. 有效的字母异位词
          */
-          System.out.println("data:" + isAnagramMine("rat","nagaram"));
+//        System.out.println("data:" + isAnagramMine("rat", "nagaram"));
 
+
+        /**
+         * 306. 累加数
+         */
+        System.out.println("data:" + isAdditiveNumber("121474836472147483648"));
     }
 
     /**
+     * 203. 移除链表元素
+     * @param head
+     * @param val
+     * @return
+     */
+    public ListNode removeElements(ListNode head, int val) {
+        ListNode list = new ListNode(0);
+        list.next = head;
+        ListNode pre = list;
+        ListNode next = list.next;
+
+        while (next!=null){
+            if (next.val==val) {
+                pre.next = next.next;
+            }else {
+                pre = pre.next;
+            }
+            next = next.next;
+        }
+        return list.next;
+    }
+
+    /**
+     * 21. 合并两个有序链表
+     *
+     * @param list1
+     * @param list2
+     * @return
+     */
+    public ListNode mergeTwoLists(ListNode list1, ListNode list2) {
+        ListNode list = new ListNode(0);
+        ListNode pre = list;
+        while (list1!=null && list2!=null){
+            if (list1.val>list2.val){
+                pre.next = list2;
+                list2 = list2.next;
+            }else {
+                pre.next = list1;
+                list1 = list1.next;
+            }
+            pre = pre.next;
+        }
+        if (list1!=null){
+            pre.next = list1;
+        }
+
+        if (list2!=null){
+            pre.next = list2;
+        }
+
+        return list.next;
+    }
+
+    /**
+     * 141. 环形链表
+     *
+     * @param head
+     * @return
+     */
+    public static boolean hasCycleMine2(ListNode head) {
+        if (head == null) return false;
+        ListNode pre = new ListNode(-1);
+        pre.next = head;
+        ListNode bef = pre;
+        while (bef.next != null && bef != null) {
+            bef = bef.next.next;
+            pre = pre.next;
+            if (bef == pre) return true;
+        }
+        return false;
+    }
+
+    public static boolean hasCycleMine(ListNode head) {
+        if (head == null) return false;
+        Set<ListNode> set = new HashSet<>();
+        ListNode pre = head;
+        while (pre.next != null) {
+            if (set.contains(pre)) return true;
+            set.add(pre);
+            pre = pre.next;
+        }
+        return false;
+    }
+
+    /**
+     * 306. 累加数
+     *
+     * @param num
+     * @return
+     */
+
+    public static boolean isAdditiveNumber(String num) {
+        return dfs(num, 0, 0, 0, 0);
+    }
+
+    private static boolean dfs(String num, int index, int count, long prevprev, long prev) {
+        if (index >= num.length()) {
+            return count > 2;
+        }
+
+        long current = 0;
+        for (int i = index; i < num.length(); i++) {
+            char c = num.charAt(i);
+
+            if (num.charAt(index) == '0' && i > index) {
+                // 剪枝1：不能做为前导0，但是它自己是可以单独做为0来使用的
+                return false;
+            }
+
+            current = current * 10 + c - '0';
+
+            if (count >= 2) {
+                long sum = prevprev + prev;
+                if (current > sum) {
+                    // 剪枝2：如果当前数比之前两数的和大了，说明不合适
+                    return false;
+                }
+                if (current < sum) {
+                    // 剪枝3：如果当前数比之前两数的和小了，说明还不够，可以继续添加新的字符进来
+                    continue;
+                }
+            }
+
+            // 当前满足条件了，或者还不到两个数，向下一层探索
+            if (dfs(num, i + 1, count + 1, prev, current)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    public static boolean isAdditiveNumberMine(String num) {
+        int length = num.length();
+        if (length < 3) return false;
+        for (int i = 0; i <= length - i; i++) {
+            String first = num.substring(0, i + 1);
+            if (first.length() > 1 && first.charAt(0) == '0') {
+                continue;
+            }
+            for (int j = i + 1; j <= length - j + i; j++) {
+                String second = num.substring(i + 1, j + 1);
+                if (second.length() > 1 && second.charAt(0) == '0') {
+                    continue;
+                }
+                String next = addNum(first, second);
+
+                if (next.length() > (length - j - 1)) continue;
+                int pos = j + 1;
+                boolean is = false;
+                String first2 = first;
+                String second2 = second;
+                while (pos < length) {
+                    if (!next.equals(num.substring(pos, Math.min(pos += next.length(), length)))) {
+                        is = false;
+                        break;
+                    }
+                    first2 = second2;
+                    second2 = next;
+                    next = addNum(first2, second2);
+                    is = true;
+                }
+                if (is && pos == length) {
+                    return true;
+                }
+            }
+        }
+
+        return false;
+    }
+
+    public static String addNum(String first, String second) {
+        String next = "";
+        if (first.length() < 10 && second.length() < 10) {
+            next = String.valueOf(Integer.parseInt(first) + Integer.parseInt(second));
+        } else {
+            int[] data = new int[Math.max(first.length(), second.length()) + 1];
+            boolean carry = false;
+            int i = 0;
+            for (i = 0; i < Math.min(first.length(), second.length()); i++) {
+                int result = first.charAt(i) + second.charAt(i) - 2 * '0';
+                if (carry) {
+                    result += 1;
+                }
+                if (result < 10) {
+                    data[i] = result;
+                    carry = false;
+                } else {
+                    data[i] = result - 10;
+                    carry = true;
+                }
+            }
+
+            for (; i < first.length(); i++) {
+                int result = first.charAt(i) - '0';
+                if (carry) {
+                    result += 1;
+                }
+                if (result < 10) {
+                    data[i] = result;
+                    carry = false;
+                } else {
+                    data[i] = result - 10;
+                    carry = true;
+                }
+            }
+
+            for (; i < second.length(); i++) {
+                int result = second.charAt(i) - '0';
+                if (carry) {
+                    result += 1;
+                }
+                if (result < 10) {
+                    data[i] = result;
+                    carry = false;
+                } else {
+                    data[i] = result - 10;
+                    carry = true;
+                }
+            }
+            if (carry) {
+                data[i] = 1;
+            }
+
+            for (int j = 0; j < data.length; j++) {
+                next += data[i];
+            }
+        }
+
+        return next;
+    }
+
+
+    /**
      * 242. 有效的字母异位词
+     *
      * @param s
      * @param t
      * @return
@@ -77,15 +333,15 @@ public class LeetCode2201 {
     public static boolean isAnagramMine(String s, String t) {
         int[] result = new int[26];
         for (int i = 0; i < s.length(); i++) {
-            result[s.charAt(i)-'a']++;
+            result[s.charAt(i) - 'a']++;
         }
 
         for (int i = 0; i < t.length(); i++) {
-            result[t.charAt(i)-'a']--;
+            result[t.charAt(i) - 'a']--;
         }
 
         for (int i = 0; i < result.length; i++) {
-            if (result[i]!=0){
+            if (result[i] != 0) {
                 return false;
             }
         }
@@ -95,6 +351,7 @@ public class LeetCode2201 {
 
     /**
      * 383. 赎金信
+     *
      * @param ransomNote
      * @param magazine
      * @return
@@ -102,15 +359,15 @@ public class LeetCode2201 {
     public static boolean canConstructMine(String ransomNote, String magazine) {
         int[] result = new int[26];
         for (int i = 0; i < magazine.length(); i++) {
-            result[magazine.charAt(i)-'a']++;
+            result[magazine.charAt(i) - 'a']++;
         }
 
         for (int i = 0; i < ransomNote.length(); i++) {
-            result[ransomNote.charAt(i)-'a']--;
+            result[ransomNote.charAt(i) - 'a']--;
         }
 
         for (int i = 0; i < result.length; i++) {
-            if (result[i]<0){
+            if (result[i] < 0) {
                 return false;
             }
         }
@@ -120,16 +377,17 @@ public class LeetCode2201 {
 
     /**
      * 387. 字符串中的第一个唯一字符
+     *
      * @param s
      * @return
      */
     public static int firstUniqCharMine(String s) {
         int[] result = new int[26];
         for (int i = 0; i < s.length(); i++) {
-            result[s.charAt(i)-'a']++;
+            result[s.charAt(i) - 'a']++;
         }
         for (int i = 0; i < s.length(); i++) {
-            if (result[s.charAt(i)-'a'] == 1){
+            if (result[s.charAt(i) - 'a'] == 1) {
                 return i;
             }
         }
@@ -139,6 +397,7 @@ public class LeetCode2201 {
 
     /**
      * 1629. 按键持续时间最长的键
+     *
      * @param releaseTimes
      * @param keysPressed
      * @return
@@ -147,11 +406,11 @@ public class LeetCode2201 {
         char result = keysPressed.charAt(0);
         int max = releaseTimes[0];
         for (int i = 1; i < releaseTimes.length; i++) {
-            if (releaseTimes[i] - releaseTimes[i-1] > max){
+            if (releaseTimes[i] - releaseTimes[i - 1] > max) {
                 result = keysPressed.charAt(i);
-                max = releaseTimes[i] - releaseTimes[i-1];
-            }else if (releaseTimes[i] - releaseTimes[i-1] == max){
-                result = (char) Math.max(result,keysPressed.charAt(i));
+                max = releaseTimes[i] - releaseTimes[i - 1];
+            } else if (releaseTimes[i] - releaseTimes[i - 1] == max) {
+                result = (char) Math.max(result, keysPressed.charAt(i));
             }
         }
 
@@ -183,7 +442,7 @@ public class LeetCode2201 {
             System.out.println("first:" + first);
             System.out.println("length:" + length);
             for (int j = 0; j < length; j++) {
-                list.add(list.get(length-j-1) | first);
+                list.add(list.get(length - j - 1) | first);
             }
         }
 
