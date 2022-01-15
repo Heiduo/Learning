@@ -7,8 +7,10 @@ public class LeetCode2201 {
     public static class ListNode {
         int val;
         ListNode next;
+
         ListNode() {
         }
+
         ListNode(int val) {
             this.val = val;
         }
@@ -16,6 +18,26 @@ public class LeetCode2201 {
         ListNode(int val, ListNode next) {
             this.val = val;
             this.next = next;
+        }
+    }
+
+
+    public static class TreeNode {
+        int val;
+        TreeNode left;
+        TreeNode right;
+
+        TreeNode() {
+        }
+
+        TreeNode(int val) {
+            this.val = val;
+        }
+
+        TreeNode(int val, TreeNode left, TreeNode right) {
+            this.val = val;
+            this.left = left;
+            this.right = right;
         }
     }
 
@@ -86,11 +108,563 @@ public class LeetCode2201 {
         /**
          * 306. 累加数
          */
-        System.out.println("data:" + isAdditiveNumber("121474836472147483648"));
+//        System.out.println("data:" + isAdditiveNumber("121474836472147483648"));
+
+        /**
+         * 20. 有效的括号
+         */
+//        System.out.println("data:" + isValid20Mine("{[]}"));
+
+        /**
+         * 334. 递增的三元子序列
+         */
+//        System.out.println("data:" + increasingTripletMine(new int[]{1, 5, 0, 4, 1, 3}));
+
+        /**
+         * 747. 至少是其他数字两倍的最大数
+         */
+//        System.out.println("data:" + dominantIndexMine(new int[]{1, 2}));
+
+        /**
+         * 373. 查找和最小的K对数字
+         */
+//        System.out.println("data:" + kSmallestPairsMine(new int[]{1, 2, 4, 5, 6}, new int[]{3, 5, 7, 9}, 3));
+
+        /**
+         * 1716. 计算力扣银行的钱
+         */
+        System.out.println("data:" + totalMoney1716Mine(8));
     }
 
     /**
+     * 112. 路径总和
+     * @param root
+     * @param targetSum
+     * @return
+     */
+    public static boolean hasPathSumMine(TreeNode root, int targetSum) {
+        if (root==null) return false;
+
+        return hasPathSumMineOther(root,0,targetSum);
+
+    }
+
+    public static boolean hasPathSumMineOther(TreeNode node, int sum, int targetSum) {
+        if (node.left == null && node.right==null){
+            return sum + node.val == targetSum;
+        }else {
+            if (node.left!=null && node.right!=null){
+                return hasPathSumMineOther(node.left,sum+node.val,targetSum)
+                        || hasPathSumMineOther(node.right,sum+node.val,targetSum);
+            }else if (node.right == null){
+                return hasPathSumMineOther(node.left,sum+node.val,targetSum);
+            }else {
+                return hasPathSumMineOther(node.right,sum+node.val,targetSum);
+            }
+        }
+    }
+
+    /**
+     * 226. 翻转二叉树
+     * @param root
+     * @return
+     */
+    public static TreeNode invertTreeMine(TreeNode root) {
+        if (root == null) return root;
+        Deque<TreeNode> deque = new LinkedList<>();
+        deque.add(root);
+        while (!deque.isEmpty()){
+            TreeNode node = deque.poll();
+            TreeNode left = node.left;
+            node.left = node.right;
+            node.right = left;
+            if (node.left!=null){
+                deque.add(node.left);
+            }
+            if (node.right!=null){
+                deque.add(node.right);
+            }
+        }
+        return root;
+    }
+
+    /**
+     * 1716. 计算力扣银行的钱
+     * @param n
+     * @return
+     */
+    public static int totalMoney1716Mine(int n) {
+        int total = 0;
+
+        for (int i = 1; i <= n; i++) {
+            total += ((i-1)/7 + (i-1)%7+1);
+        }
+
+        return total;
+    }
+
+    /**
+     * 101. 对称二叉树
+     * @param root
+     * @return
+     */
+    public boolean isSymmetricMine(TreeNode root) {
+        if (root==null){
+            return false;
+        }
+
+        return isSymmetricOther(root.left,root.right);
+    }
+
+    public boolean isSymmetricOther(TreeNode first,TreeNode second){
+        if (first!=null && second!=null){
+            if (first.val == second.val){
+                return isSymmetricOther(first.left,second.right) && isSymmetricOther(first.right,second.left);
+            }else {
+                return false;
+            }
+        }else if (first == null && second == null){
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * 104. 二叉树的最大深度
+     *
+     * @param root
+     * @return
+     */
+    public static int maxDepth(TreeNode root) {
+        if (root == null) {
+            return 0;
+        } else {
+            int leftHeight = maxDepth(root.left);
+            int rightHeight = maxDepth(root.right);
+            return Math.max(leftHeight, rightHeight) + 1;
+        }
+    }
+
+    public static int maxDepthMine(TreeNode root) {
+        int max = 0;
+        if (root != null) {
+            Deque<TreeNode> deque = new LinkedList<>();
+            deque.add(root);
+            int size = deque.size();
+            while (!deque.isEmpty()) {
+                TreeNode node = deque.poll();
+                if (node.left != null) {
+                    deque.add(node.left);
+                }
+                if (node.right != null) {
+                    deque.add(node.right);
+                }
+                size--;
+                if (size == 0) {
+                    max++;
+                    size = deque.size();
+                }
+
+            }
+        }
+
+        return max;
+    }
+
+    /**
+     * 102. 二叉树的层序遍历
+     *
+     * @param root
+     * @return
+     */
+    public static List<List<Integer>> levelOrderMine(TreeNode root) {
+        Deque<TreeNode> deque = new LinkedList<>();
+        List<List<Integer>> result = new LinkedList<>();
+        if (root == null) {
+            return result;
+        }
+        deque.add(root);
+        int length = deque.size();
+        List<Integer> list = new ArrayList<>();
+        while (!deque.isEmpty()) {
+            TreeNode node = deque.poll();
+            list.add(node.val);
+            if (node.left != null) {
+                deque.add(node.left);
+            }
+            if (node.right != null) {
+                deque.add(node.right);
+            }
+            length--;
+            if (length == 0) {
+                result.add(list);
+                list = new ArrayList<>();
+                length = deque.size();
+            }
+
+        }
+
+        return result;
+    }
+
+    /**
+     * 373. 查找和最小的K对数字
+     * error
+     *
+     * @param nums1
+     * @param nums2
+     * @param k
+     * @return
+     */
+    public static List<List<Integer>> kSmallestPairsMine(int[] nums1, int[] nums2, int k) {
+        int pos1 = 0, pos2 = 0;
+        List<List<Integer>> result = new ArrayList<>();
+        if (nums1.length * nums2.length <= k) {
+            for (int i1 : nums1) {
+                for (int i : nums2) {
+                    List<Integer> list = new ArrayList<>();
+                    list.add(i1);
+                    list.add(i);
+                    result.add(list);
+                }
+            }
+            return result;
+        }
+        while (result.size() < k) {
+            List<Integer> list = new ArrayList<>();
+            list.add(nums1[pos1]);
+            list.add(nums2[pos2]);
+            if (pos1 + 1 < nums1.length && pos2 + 1 < nums2.length) {
+                int sum1 = nums1[pos1 + 1] + nums2[pos2];
+                int sum2 = nums1[pos1] + nums2[pos2 + 1];
+                if (sum1 <= sum2) {
+                    pos1++;
+                    pos2 = 0;
+                } else {
+                    pos2++;
+                    pos1 = 0;
+                }
+            } else if (pos1 + 1 == nums1.length) {
+                pos2++;
+                pos1 = 0;
+            } else {
+                pos1++;
+                pos2 = 0;
+            }
+
+            result.add(list);
+        }
+
+        return result;
+    }
+
+    /**
+     * 747. 至少是其他数字两倍的最大数
+     *
+     * @param nums
+     * @return
+     */
+    public static int dominantIndexMine(int[] nums) {
+        if (nums.length == 1) return 0;
+        int max = Integer.MIN_VALUE;
+        int pos = -1;
+        int max2 = Integer.MIN_VALUE;
+        for (int i = 0; i < nums.length; i++) {
+            if (nums[i] > max) {
+                pos = i;
+                max = nums[i];
+            }
+
+        }
+        for (int i = 0; i < nums.length; i++) {
+            if (nums[i] < max && nums[i] > max2) {
+                max2 = nums[i];
+            }
+
+        }
+        if (max2 == 0 || max / max2 >= 2) {
+            return pos;
+        }
+        return -1;
+    }
+
+    /**
+     * 145. 二叉树的后序遍历
+     *
+     * @param root
+     * @return
+     */
+    public static List<Integer> postorderTraversalMine2(TreeNode root) {
+        List<Integer> list = new ArrayList<>();
+        Stack<TreeNode> stack = new Stack<>();
+        if (root != null) {
+            TreeNode prev = null;
+            while (root != null || !stack.isEmpty()) {
+                while (root != null) {
+                    stack.push(root);
+                    root = root.left;
+                }
+                root = stack.pop();
+                if (root.right == null || root.right == prev) {
+                    list.add(root.val);
+                    prev = root;
+                    root = null;
+                } else {
+                    stack.push(root);
+                    root = root.right;
+                }
+            }
+        }
+
+        return list;
+    }
+
+
+    public static List<Integer> postorderTraversalMine(TreeNode root) {
+        List<Integer> list = new ArrayList<>();
+        postorderTraversalOteher(root, list);
+        return list;
+    }
+
+    public static void postorderTraversalOteher(TreeNode root, List<Integer> list) {
+        if (root == null) {
+            return;
+        }
+        postorderTraversalOteher(root.left, list);
+        postorderTraversalOteher(root.right, list);
+        list.add(root.val);
+    }
+
+    /**
+     * 94. 二叉树的中序遍历
+     *
+     * @param root
+     * @return
+     */
+    public static List<Integer> inorderTraversalMine2(TreeNode root) {
+        List<Integer> list = new ArrayList<>();
+        Stack<TreeNode> stack = new Stack<>();
+        if (root != null) {
+            TreeNode node = root;
+            stack.add(node);
+            while (node.left != null) {
+                stack.add(node.left);
+                node = node.left;
+            }
+            while (!stack.isEmpty()) {
+                node = stack.pop();
+                list.add(node.val);
+                if (node.right != null) {
+                    stack.add(node.right);
+                    node = node.right;
+                    while (node.left != null) {
+                        stack.add(node.left);
+                        node = node.left;
+                    }
+                }
+
+            }
+        }
+
+        return list;
+    }
+
+
+    public static List<Integer> inorderTraversalMine(TreeNode root) {
+        List<Integer> list = new ArrayList<>();
+        inorderTraversalOteher(root, list);
+        return list;
+    }
+
+    public static void inorderTraversalOteher(TreeNode root, List<Integer> list) {
+        if (root == null) {
+            return;
+        }
+        inorderTraversalOteher(root.left, list);
+        list.add(root.val);
+        inorderTraversalOteher(root.right, list);
+    }
+
+    /**
+     * 144. 二叉树的前序遍历
+     *
+     * @param root
+     * @return
+     */
+    public static List<Integer> preorderTraversalMine2(TreeNode root) {
+        List<Integer> list = new ArrayList<>();
+        Deque<TreeNode> deque = new LinkedList<>();
+        if (root != null) {
+            deque.add(root);
+            while (!deque.isEmpty()) {
+                TreeNode node = deque.pollLast();
+                list.add(node.val);
+                if (node.right != null) {
+                    deque.add(node.right);
+                }
+                if (node.left != null) {
+                    deque.add(node.left);
+                }
+            }
+        }
+
+        return list;
+    }
+
+    public static List<Integer> preorderTraversalMine(TreeNode root) {
+        List<Integer> list = new ArrayList<>();
+        if (root != null) {
+            list.add(root.val);
+            preorderTraversalOteher(root.left, list);
+            preorderTraversalOteher(root.right, list);
+        }
+
+        return list;
+    }
+
+    public static void preorderTraversalOteher(TreeNode root, List<Integer> list) {
+        if (root == null) {
+            return;
+        }
+        list.add(root.val);
+        preorderTraversalOteher(root.left, list);
+        preorderTraversalOteher(root.right, list);
+    }
+
+    /**
+     * 334. 递增的三元子序列
+     *
+     * @param nums
+     * @return
+     */
+
+    public static boolean increasingTriplet(int[] nums) {
+        int n = nums.length;
+        if (n < 3) {
+            return false;
+        }
+        int first = nums[0], second = Integer.MAX_VALUE;
+        for (int i = 1; i < n; i++) {
+            int num = nums[i];
+            if (num > second) {
+                return true;
+            } else if (num > first) {
+                second = num;
+            } else {
+                first = num;
+            }
+        }
+        return false;
+    }
+
+
+    public static boolean increasingTripletMine(int[] nums) {
+        if (nums.length < 3) return false;
+        Deque<Integer> deque = new LinkedList<>();
+        int first = 0;
+        int second = 0;
+        boolean hasSecond = false;
+        for (int i = 0; i < nums.length; i++) {
+            if (deque.isEmpty()) {
+                deque.push(nums[i]);
+                first = nums[i];
+            } else if (deque.size() == 1) {
+                if (deque.peek() > nums[i]) {
+                    deque.pop();
+                    first = nums[i];
+                    deque.push(nums[i]);
+                } else if (deque.peek() < nums[i]) {
+                    if (hasSecond && second < nums[i]) return true;
+                    deque.push(nums[i]);
+                }
+            } else if (deque.size() == 2) {
+                if (deque.peek() > nums[i]) {
+                    if (first > nums[i]) {
+                        hasSecond = true;
+                        second = deque.pop();
+                        first = nums[i];
+                        deque.push(nums[i]);
+                    } else if (first < nums[i]) {
+                        deque.pop();
+                        deque.push(nums[i]);
+                    }
+                } else if (deque.peek() < nums[i]) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    /**
+     * 20. 有效的括号
+     *
+     * @param s
+     * @return
+     */
+    public static boolean isValid20Mine(String s) {
+        if (s.length() % 2 != 0) return false;
+        Stack<Character> stringStack = new Stack<>();
+        for (int i = 0; i < s.length(); i++) {
+            char c = s.charAt(i);
+            if (c == '{' || c == '[' || c == '(') {
+                stringStack.push(c);
+            } else if (c == '}') {
+                if (stringStack.empty() || stringStack.peek() != '{') {
+                    return false;
+                } else {
+                    stringStack.pop();
+                }
+            } else if (c == ']') {
+                if (stringStack.empty() || stringStack.peek() != '[') {
+                    return false;
+                } else {
+                    stringStack.pop();
+                }
+            } else if (c == ')') {
+                if (stringStack.empty() || stringStack.peek() != '(') {
+                    return false;
+                } else {
+                    stringStack.pop();
+                }
+            }
+        }
+
+        return stringStack.empty();
+
+    }
+
+    /**
+     * 206. 反转链表
+     *
+     * @param head
+     * @return
+     */
+    public static ListNode reverseListMine(ListNode head) {
+        ListNode prev = null;
+        ListNode curr = head;
+        while (curr != null) {
+            ListNode next = curr.next;
+            curr.next = prev;
+            prev = curr;
+            curr = next;
+        }
+        return prev;
+
+    }
+
+    public static ListNode reverseMine(ListNode head, ListNode pre) {
+        if (head.next == null) {
+            return head;
+        }
+        reverseMine(head.next, pre.next).next = pre;
+        return pre;
+    }
+
+
+    /**
      * 203. 移除链表元素
+     *
      * @param head
      * @param val
      * @return
@@ -101,10 +675,10 @@ public class LeetCode2201 {
         ListNode pre = list;
         ListNode next = list.next;
 
-        while (next!=null){
-            if (next.val==val) {
+        while (next != null) {
+            if (next.val == val) {
                 pre.next = next.next;
-            }else {
+            } else {
                 pre = pre.next;
             }
             next = next.next;
@@ -122,21 +696,21 @@ public class LeetCode2201 {
     public ListNode mergeTwoLists(ListNode list1, ListNode list2) {
         ListNode list = new ListNode(0);
         ListNode pre = list;
-        while (list1!=null && list2!=null){
-            if (list1.val>list2.val){
+        while (list1 != null && list2 != null) {
+            if (list1.val > list2.val) {
                 pre.next = list2;
                 list2 = list2.next;
-            }else {
+            } else {
                 pre.next = list1;
                 list1 = list1.next;
             }
             pre = pre.next;
         }
-        if (list1!=null){
+        if (list1 != null) {
             pre.next = list1;
         }
 
-        if (list2!=null){
+        if (list2 != null) {
             pre.next = list2;
         }
 
