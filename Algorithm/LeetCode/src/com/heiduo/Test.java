@@ -14,14 +14,12 @@ public class Test {
         x1 = (byte) 0xff;
         int y = ((x0 &0xff)<<8) + (x1&0xff);
 
-        System.out.println("y:" + y);
-        System.out.println("y:" + Integer.toHexString(y));
-        y = (y<<16)>>16;
-        System.out.println("y:" + y);
-        System.out.println("y:" + Integer.toHexString(y));
 
         String name = "test.txt";
         name = name.substring(0,name.indexOf('.'));
         System.out.println("name:" + name);
+
+        System.out.println("data:" + (1&(int)Math.pow(2,0)));
+
     }
 }

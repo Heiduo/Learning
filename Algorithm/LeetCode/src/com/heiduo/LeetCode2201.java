@@ -4,43 +4,6 @@ import java.util.*;
 
 public class LeetCode2201 {
 
-    public static class ListNode {
-        int val;
-        ListNode next;
-
-        ListNode() {
-        }
-
-        ListNode(int val) {
-            this.val = val;
-        }
-
-        ListNode(int val, ListNode next) {
-            this.val = val;
-            this.next = next;
-        }
-    }
-
-
-    public static class TreeNode {
-        int val;
-        TreeNode left;
-        TreeNode right;
-
-        TreeNode() {
-        }
-
-        TreeNode(int val) {
-            this.val = val;
-        }
-
-        TreeNode(int val, TreeNode left, TreeNode right) {
-            this.val = val;
-            this.left = left;
-            this.right = right;
-        }
-    }
-
     public static void main(String[] args) {
 
         /***
@@ -133,39 +96,318 @@ public class LeetCode2201 {
         /**
          * 1716. 计算力扣银行的钱
          */
-        System.out.println("data:" + totalMoney1716Mine(8));
+//        System.out.println("data:" + totalMoney1716Mine(8));
+
+        /**
+         * 539. 最小时间差
+         */
+//        System.out.println("data:" + findMinDifferenceMine(Arrays.asList("23:59","00:00")));
+
+        /**
+         * 219. 存在重复元素 II
+         */
+//        System.out.println("data:" + containsNearbyDuplicateMine(new int[]{
+//                1,2,3,1,2,3
+//        },2));
+
+        /**
+         * 2029. 石子游戏 IX
+         */
+        System.out.println("data:" + stoneGameIXMine(new int[]{1,1,7,10,8,17,10,20,2,10}));
+    }
+
+
+
+    /**
+     * 2029. 石子游戏 IX
+     * error
+     * @param stones
+     * @return
+     */
+    public static boolean stoneGameIX(int[] stones){
+        int cnt0 = 0, cnt1 = 0, cnt2 = 0;
+        for (int val : stones) {
+            int type = val % 3;
+            if (type == 0) {
+                ++cnt0;
+            } else if (type == 1) {
+                ++cnt1;
+            } else {
+                ++cnt2;
+            }
+        }
+        if (cnt0 % 2 == 0) {
+            return cnt1 >= 1 && cnt2 >= 1;
+        }
+        return cnt1 - cnt2 > 2 || cnt2 - cnt1 > 2;
+    }
+
+    public static boolean stoneGameIXMine(int[] stones) {
+        int total = 0;
+        for (int i = 0; i < stones.length; i++) {
+            total += stones[i];
+        }
+        int remain = 0;
+        boolean[] select = new boolean[stones.length];
+        int nums = 0;
+        while (remain != total) {
+            boolean hasSelect = false;
+            for (int i = 0; i < stones.length; i++) {
+                if (!select[i] && (remain + stones[i]) % 3 != 0) {
+                    select[i] = true;
+                    remain += stones[i];
+                    hasSelect = true;
+                    nums++;
+                }
+            }
+            if (!hasSelect) {
+                return nums % 2 == 1;
+            }
+        }
+
+        if (nums == stones.length){
+            return nums%2==1;
+        }
+        return false;
+    }
+
+    /**
+     * 219. 存在重复元素 II
+     *
+     * @param nums
+     * @param k
+     * @return
+     */
+    public static boolean containsNearbyDuplicate(int[] nums, int k) {
+        Set<Integer> set = new HashSet<Integer>();
+        int length = nums.length;
+        for (int i = 0; i < length; i++) {
+            if (i > k) {
+                set.remove(nums[i - k - 1]);
+            }
+            if (!set.add(nums[i])) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public static boolean containsNearbyDuplicateMine(int[] nums, int k) {
+        if (k == 0 || nums.length == 1) return false;
+        Map<Integer, Integer> map = new HashMap<>();
+        for (int i = 0; i < nums.length; i++) {
+            if (map.get(nums[i]) != null
+                    && Math.abs(map.get(nums[i]) - i) <= k) {
+                return true;
+            }
+            map.put(nums[i], i);
+        }
+        return false;
+    }
+
+    /**
+     * 539. 最小时间差
+     *
+     * @param timePoints
+     * @return
+     */
+    public static int findMinDifferenceMine(List<String> timePoints) {
+        Collections.sort(timePoints);
+        int min = Integer.MAX_VALUE;
+        int length = timePoints.size();
+        for (int i = 0; i < length - 1; i++) {
+            int first = Integer.parseInt(timePoints.get(i).substring(0, 2)) * 60 + Integer.parseInt(timePoints.get(i).substring(3));
+            int second = Integer.parseInt(timePoints.get(i + 1).substring(0, 2)) * 60 + Integer.parseInt(timePoints.get(i + 1).substring(3));
+            min = Math.min(min, second - first);
+        }
+        int first = Integer.parseInt(timePoints.get(0).substring(0, 2)) * 60 + Integer.parseInt(timePoints.get(0).substring(3));
+        int second = Integer.parseInt(timePoints.get(length - 1).substring(0, 2)) * 60 + Integer.parseInt(timePoints.get(length - 1).substring(3));
+        min = Math.min(min, Math.min(second - first, 24 * 60 - second + first));
+        return min;
+    }
+
+    /**
+     * 235. 二叉搜索树的最近公共祖先
+     *
+     * @param root
+     * @param p
+     * @param q
+     * @return
+     */
+    public TreeNode lowestCommonAncestorMine(TreeNode root, TreeNode p, TreeNode q) {
+        TreeNode head = root;
+        while (head != null) {
+            if (head.val < p.val && head.val < q.val) {
+                head = head.right;
+            } else if (head.val > p.val && head.val > q.val) {
+                head = head.left;
+            } else {
+                break;
+            }
+        }
+        return head;
+    }
+
+    /**
+     * 653. 两数之和 IV - 输入 BST
+     *
+     * @param root
+     * @param k
+     * @return
+     */
+    public boolean findTargetMine(TreeNode root, int k) {
+        if (root == null) return false;
+        Map<Integer, Integer> map = new HashMap<>();
+        Deque<TreeNode> deque = new LinkedList<>();
+        deque.add(root);
+        while (!deque.isEmpty()) {
+            TreeNode node = deque.pop();
+            if (map.get(node.val) != null) return true;
+            map.put(k - node.val, node.val);
+            if (node.left != null) {
+                deque.add(node.left);
+            }
+            if (node.right != null) {
+                deque.add(node.right);
+            }
+        }
+        return false;
+    }
+
+    /**
+     * 98. 验证二叉搜索树
+     *
+     * @param root
+     * @return
+     */
+    public boolean isValidBSTMine(TreeNode root) {
+        if (root == null) return true;
+        return isValidBST(root, Long.MIN_VALUE, Long.MAX_VALUE);
+    }
+
+    public boolean isValidBST(TreeNode node, long lower, long upper) {
+        if (node == null) {
+            return true;
+        }
+        if (node.val <= lower || node.val >= upper) {
+            return false;
+        }
+        return isValidBST(node.left, lower, node.val) && isValidBST(node.right, node.val, upper);
+    }
+
+
+    /**
+     * 701. 二叉搜索树中的插入操作
+     *
+     * @param root
+     * @param val
+     * @return
+     */
+    public TreeNode insertIntoBST(TreeNode root, int val) {
+        if (root == null) {
+            return new TreeNode(val);
+        }
+        TreeNode head = root;
+        while (head != null) {
+            if (head.val < val) {
+                if (head.right == null) {
+                    head.right = new TreeNode(val);
+                    break;
+                } else {
+                    head = head.right;
+                }
+            } else {
+                if (head.left == null) {
+                    head.left = new TreeNode(val);
+                    break;
+                } else {
+                    head = head.left;
+                }
+            }
+        }
+
+        return root;
+    }
+
+    public TreeNode insertIntoBSTMine(TreeNode root, int val) {
+        if (root == null) {
+            root = new TreeNode(val);
+            return root;
+        }
+        TreeNode head = root;
+        TreeNode pre = head;
+        boolean isLeft = false;
+        while (head != null) {
+            pre = head;
+            if (head.val < val) {
+                isLeft = false;
+                head = head.right;
+            } else {
+                isLeft = true;
+                head = head.left;
+            }
+        }
+        if (isLeft) {
+            pre.left = new TreeNode(val);
+        } else {
+            pre.right = new TreeNode(val);
+        }
+
+        return root;
+    }
+
+    /**
+     * 700. 二叉搜索树中的搜索
+     *
+     * @param root
+     * @param val
+     * @return
+     */
+    public TreeNode searchBSTMine(TreeNode root, int val) {
+        TreeNode head = root;
+        while (head != null) {
+            if (head.val == val) return head;
+            else if (head.val < val) {
+                head = head.right;
+            } else {
+                head = head.left;
+            }
+        }
+        return null;
     }
 
     /**
      * 112. 路径总和
+     *
      * @param root
      * @param targetSum
      * @return
      */
     public static boolean hasPathSumMine(TreeNode root, int targetSum) {
-        if (root==null) return false;
+        if (root == null) return false;
 
-        return hasPathSumMineOther(root,0,targetSum);
+        return hasPathSumMineOther(root, 0, targetSum);
 
     }
 
     public static boolean hasPathSumMineOther(TreeNode node, int sum, int targetSum) {
-        if (node.left == null && node.right==null){
+        if (node.left == null && node.right == null) {
             return sum + node.val == targetSum;
-        }else {
-            if (node.left!=null && node.right!=null){
-                return hasPathSumMineOther(node.left,sum+node.val,targetSum)
-                        || hasPathSumMineOther(node.right,sum+node.val,targetSum);
-            }else if (node.right == null){
-                return hasPathSumMineOther(node.left,sum+node.val,targetSum);
-            }else {
-                return hasPathSumMineOther(node.right,sum+node.val,targetSum);
+        } else {
+            if (node.left != null && node.right != null) {
+                return hasPathSumMineOther(node.left, sum + node.val, targetSum)
+                        || hasPathSumMineOther(node.right, sum + node.val, targetSum);
+            } else if (node.right == null) {
+                return hasPathSumMineOther(node.left, sum + node.val, targetSum);
+            } else {
+                return hasPathSumMineOther(node.right, sum + node.val, targetSum);
             }
         }
     }
 
     /**
      * 226. 翻转二叉树
+     *
      * @param root
      * @return
      */
@@ -173,15 +415,15 @@ public class LeetCode2201 {
         if (root == null) return root;
         Deque<TreeNode> deque = new LinkedList<>();
         deque.add(root);
-        while (!deque.isEmpty()){
+        while (!deque.isEmpty()) {
             TreeNode node = deque.poll();
             TreeNode left = node.left;
             node.left = node.right;
             node.right = left;
-            if (node.left!=null){
+            if (node.left != null) {
                 deque.add(node.left);
             }
-            if (node.right!=null){
+            if (node.right != null) {
                 deque.add(node.right);
             }
         }
@@ -190,6 +432,7 @@ public class LeetCode2201 {
 
     /**
      * 1716. 计算力扣银行的钱
+     *
      * @param n
      * @return
      */
@@ -197,7 +440,7 @@ public class LeetCode2201 {
         int total = 0;
 
         for (int i = 1; i <= n; i++) {
-            total += ((i-1)/7 + (i-1)%7+1);
+            total += ((i - 1) / 7 + (i - 1) % 7 + 1);
         }
 
         return total;
@@ -205,25 +448,26 @@ public class LeetCode2201 {
 
     /**
      * 101. 对称二叉树
+     *
      * @param root
      * @return
      */
     public boolean isSymmetricMine(TreeNode root) {
-        if (root==null){
+        if (root == null) {
             return false;
         }
 
-        return isSymmetricOther(root.left,root.right);
+        return isSymmetricOther(root.left, root.right);
     }
 
-    public boolean isSymmetricOther(TreeNode first,TreeNode second){
-        if (first!=null && second!=null){
-            if (first.val == second.val){
-                return isSymmetricOther(first.left,second.right) && isSymmetricOther(first.right,second.left);
-            }else {
+    public boolean isSymmetricOther(TreeNode first, TreeNode second) {
+        if (first != null && second != null) {
+            if (first.val == second.val) {
+                return isSymmetricOther(first.left, second.right) && isSymmetricOther(first.right, second.left);
+            } else {
                 return false;
             }
-        }else if (first == null && second == null){
+        } else if (first == null && second == null) {
             return true;
         }
         return false;
